@@ -115,7 +115,15 @@ def circle_from_points(x1, y1, x2, y2, x3, y3):
         #print("NO MID FOUND")
         return None
 
-
+def generate_street(begin_x, begin_y, begin_angle, end_x, end_y, end_angle):
+    s1 = EulerSnake("L", begin_x, begin_y, begin_angle)
+    s2 = EulerSnake("R", end_x, end_y, end_angle)
+    while not s1.finished and not s2.finished:
+        if math.fabs(s1.get_delta_angle(s2.pos_x, s2.pos_y)) > math.fabs(s2.get_delta_angle(s1.pos_x, s1.pos_y)):
+            s1.step(s2.pos_x, s2.pos_y, 0.1)
+        else:
+            s2.step(s1.pos_x, s1.pos_y, 0.1)
+    return (s1.x + list(reversed(s2.x)), s1.y + list(reversed(s2.y)))
 
 if __name__ == "__main__":
     v = []
@@ -123,8 +131,8 @@ if __name__ == "__main__":
     circles_x = []
     circles_y = []
     plt.ion()
-    s1 = EulerSnake("L", 0, 0, math.pi)
-    s2 = EulerSnake("R", 30, 10, 0)
+    s1 = EulerSnake("L", 0, 0, -math.pi*9/10)
+    s2 = EulerSnake("R", 20, 0, -math.pi/4)
     f = plt.figure()
     #plt.xlim([-1,15])
     #plt.ylim([-1,15])
