@@ -17,22 +17,17 @@ class Primitive:
             [np.max(self.get_points()[:][0]), np.max(self.get_points()[:][1])]
         )
 
-    def get_open_ends():
-        return np.array([])
+    def get_beginning(self):
+        raise NotImplementedError()
+
+    def get_ending(self):
+        raise NotImplementedError()
 
 class TransrotPrimitive(Primitive):
-    def __init__(self, child):
+    def __init__(self, child, translation, angle):
         self._child = child
-        self._angle = 0
-        self._translation = np.array([0, 0])
-
-    def get_angle(self):
-        return self._angle
-
-    def set_angle(self, angle):
         self._angle = angle
-
-    angle = property(get_angle, set_angle)
+        self._translation = translation
 
     def _get_matrix(self):
         cos = math.cos(self._angle)
@@ -48,14 +43,21 @@ class TransrotPrimitive(Primitive):
 
     def get_bounding_box(self):
         bb = self._child.get_bounding_box()
-        m = self._get_matrix()
         return (
-            (m * np.append(bb[0], 1))[0:2],
-            (m * np.append(bb[1], 1))[0:2]
+            self._transform_point(bb[0]),
+            self._transform_point(bb[1])
         )
 
     def get_points(self):
         return map(self._transform_point, self._child.get_points())
+
+    def get_beginning(self):
+        begin = self._child.get_beginning()
+        return (self._transform_point(begin[0]), begin[1] + self._angle)
+
+    def get_ending(self):
+        end = self._child.get_ending()
+        return (self._transform_point(end[0]), end[1] + self._angle)
 
 class StraightLine(Primitive):
     def __init__(self, length):
@@ -63,6 +65,12 @@ class StraightLine(Primitive):
 
     def get_points(self):
         return [[0, 0], [0, self._length]]
+
+    def get_beginning(self):
+        return (np.array([0, 0]), math.pi)
+
+    def get_ending(self):
+        return (np.array([0, 0]), 0)
 
 class CircularArc(Primitive):
     def __init__(self, radius, angle):
@@ -74,11 +82,20 @@ class CircularArc(Primitive):
         current_angle = 0
         while current_angle <= self._angle:
             points.append([
-                math.cos(self._angle) * self._radius,
-                math.sin(self._angle) * self._radius
+                math.cos(current_angle) * self._radius,
+                math.sin(current_angle) * self._radius
             ])
-            current_angle += 0.1
+            current_angle += 0.1 # TODO what else
         return points
+
+    def get_beginning(self):
+        return (np.array([0, 0]), 1.5 * math.pi)
+
+    def get_ending(self):
+        return (np.array([
+            math.cos(self._angle) * self._radius,
+            math.sin(self._angle) * self._radius
+        ]), self._angle + 0.5 * math.pi)
 
 class QuadBezier(Primitive): #TODO noch nicht fertig
     def __init__(self, p1, p2):
