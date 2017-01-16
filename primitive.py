@@ -92,20 +92,20 @@ class CircularArc(Primitive):
         current_angle = 0
         while current_angle <= self._angle:
             points.append([
-                math.cos(current_angle) * self._radius,
-                math.sin(current_angle) * self._radius
+                math.cos(current_angle - math.pi/2) * self._radius,
+                self._radius + math.sin(current_angle - math.pi/2) * self._radius
             ])
-            current_angle += 0.1 # TODO what else
+            current_angle += 0.01 # TODO what else
         return points
 
     def get_beginning(self):
-        return (np.array([self._radius, 0]), 1.5 * math.pi)
+        return (np.array([0, 0]), math.pi)
 
     def get_ending(self):
         return (np.array([
-            math.cos(self._angle) * self._radius,
-            math.sin(self._angle) * self._radius
-        ]), self._angle + 0.5 * math.pi)
+            math.cos(self._angle - math.pi/2) * self._radius,
+            self._radius + math.sin(self._angle - math.pi/2) * self._radius
+        ]), self._angle)
 
 class QuadBezier(Primitive): #TODO noch nicht fertig
     def __init__(self, p1, p2):
