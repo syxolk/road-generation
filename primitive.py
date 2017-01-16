@@ -79,7 +79,7 @@ class StraightLine(Primitive):
     def get_ending(self):
         return (np.array([self._length, 0]), 0)
 
-class CircularArc(Primitive):
+class LeftCircularArc(Primitive):
     def __init__(self, radius, angle):
         self._radius = radius
         self._angle = angle
@@ -106,6 +106,34 @@ class CircularArc(Primitive):
             math.cos(self._angle - math.pi/2) * self._radius,
             self._radius + math.sin(self._angle - math.pi/2) * self._radius
         ]), self._angle)
+
+class RightCircularArc(Primitive):
+    def __init__(self, radius, angle):
+        self._radius = radius
+        self._angle = angle
+
+    def __repr__(self):
+        return "RightCircularArc(radius={}, angle={})".format(self._radius, self._angle)
+
+    def get_points(self):
+        points = []
+        current_angle = 0
+        while current_angle <= self._angle:
+            points.append([
+                math.cos(math.pi/2 - current_angle) * self._radius,
+                - self._radius + math.sin(math.pi/2 - current_angle) * self._radius
+            ])
+            current_angle += 0.01 # TODO what else
+        return points
+
+    def get_beginning(self):
+        return (np.array([0, 0]), math.pi)
+
+    def get_ending(self):
+        return (np.array([
+            math.cos(math.pi/2 - self._angle) * self._radius,
+            - self._radius + math.sin(math.pi/2 - self._angle) * self._radius
+        ]), - self._angle)
 
 class QuadBezier(Primitive): #TODO noch nicht fertig
     def __init__(self, p1, p2):
