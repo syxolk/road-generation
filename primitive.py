@@ -29,6 +29,10 @@ class TransrotPrimitive(Primitive):
         self._angle = angle
         self._translation = translation
 
+    def __repr__(self):
+        return "TransrotPrimitive(translation={}, angle={}, child={})".format(
+            self._translation, self._angle, self._child)
+
     def _get_matrix(self):
         cos = math.cos(self._angle)
         sin = math.sin(self._angle)
@@ -39,7 +43,7 @@ class TransrotPrimitive(Primitive):
         ])
 
     def _transform_point(self, point):
-        return (self._get_matrix() * np.append(point, 1))[0:2]
+        return (self._get_matrix().dot(np.append(point, 1)))[0:2]
 
     def get_bounding_box(self):
         bb = self._child.get_bounding_box()
@@ -49,7 +53,7 @@ class TransrotPrimitive(Primitive):
         )
 
     def get_points(self):
-        return map(self._transform_point, self._child.get_points())
+        return list(map(self._transform_point, self._child.get_points()))
 
     def get_beginning(self):
         begin = self._child.get_beginning()
@@ -63,19 +67,25 @@ class StraightLine(Primitive):
     def __init__(self, length):
         self._length = length
 
+    def __repr__(self):
+        return "StraightLine(length={})".format(self._length)
+
     def get_points(self):
-        return [[0, 0], [0, self._length]]
+        return [[0, 0], [self._length, 0]]
 
     def get_beginning(self):
         return (np.array([0, 0]), math.pi)
 
     def get_ending(self):
-        return (np.array([0, 0]), 0)
+        return (np.array([self._length, 0]), 0)
 
 class CircularArc(Primitive):
     def __init__(self, radius, angle):
         self._radius = radius
         self._angle = angle
+
+    def __repr__(self):
+        return "CircularArc(radius={}, angle={})".format(self._radius, self._angle)
 
     def get_points(self):
         points = []
@@ -89,7 +99,7 @@ class CircularArc(Primitive):
         return points
 
     def get_beginning(self):
-        return (np.array([0, 0]), 1.5 * math.pi)
+        return (np.array([self._radius, 0]), 1.5 * math.pi)
 
     def get_ending(self):
         return (np.array([

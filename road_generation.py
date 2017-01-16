@@ -30,10 +30,12 @@ def generate_road(primitives, padding):
     return new_primitives
 
 def render_road(primitives):
+    plt.axis('equal')
+    plt.grid()
     for p in primitives:
         points = p.get_points()
-        xvalues = map(lambda c: c[0], points)
-        yvalues = map(lambda c: c[1], points)
+        xvalues = list(map(lambda c: c[0], points))
+        yvalues = list(map(lambda c: c[1], points))
         plt.plot(xvalues, yvalues)
     plt.show()
 
@@ -41,7 +43,7 @@ if __name__ == "__main__":
     primitives = [
         primitive.StraightLine(10),
         primitive.CircularArc(10, math.pi),
-        primitive.CircularArc(10, math.pi * 0.5),
-        primitive.StraightLine(10)
+        #primitive.CircularArc(10, math.pi * 0.5),
+        #primitive.StraightLine(10)
     ]
     render_road(generate_road(primitives, 10))
