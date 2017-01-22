@@ -1,4 +1,5 @@
 import primitive
+import preset_parser
 import math
 import matplotlib.pyplot as plt
 import numpy as np
@@ -59,25 +60,20 @@ def render_road(primitives):
     plt.show()
 
 if __name__ == "__main__":
-    primitives = [
-        primitive.RightCircularArc(10, math.pi /2 ),
-        primitive.RightCircularArc(10, math.pi /2 ),
-        primitive.RightCircularArc(10, math.pi /2 ),
-        primitive.RightCircularArc(10, math.pi /2 ),
-        primitive.StraightLine(5),
-        primitive.StraightLine(5),
-        primitive.StraightLine(5),
-        primitive.StraightLine(5)
-        #primitive.CircularArc(10, math.pi * 0.5)
-        #primitive.StraightLine(20),
-    ]
-    #render_road(generate_road(primitives, 5))
+    preset = preset_parser.parse("presets/round_rect.yml")
+    primitives = preset.primitives
+
     heap = []
     f = Fitness(1)
-    for i in range(10000):
+    for i in range(1000):
         random.shuffle(primitives)
         road = generate_road(primitives, 1)
         h = f.fitness(road)
-        heapq.heappush(heap, (h, road))
+        heap.append((h, road))
+
+    # sort for fitness
+    heap.sort(key=lambda x: x[0])
+
+    # render best three
     for i in range(3):
         render_road(heap[i][1])
