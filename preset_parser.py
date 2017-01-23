@@ -25,6 +25,10 @@ def parse(path):
             preset.primitives.append(primitive.LeftCircularArc(
                 p["left_arc"]["radius"],
                 math.radians(p["left_arc"]["angle"])))
+        elif "cubic_bezier" in p:
+            data = p["cubic_bezier"]
+            preset.primitives.append(primitive.CubicBezier(
+                data["p1"], data["p2"], data["p3"]))
         else:
-            print("Unknown primitive type")
+            raise ValueError("Unknown primitive type")
     return preset

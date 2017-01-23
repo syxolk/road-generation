@@ -10,5 +10,7 @@ primitives:
   - right_arc: {radius: 10, angle: 45}
   - right_arc: {radius: 10, angle: 30}
   - right_arc: {radius: 10, angle: 120}
+  - right_arc: {radius: 10, angle: 180}
   - left_arc: {radius: 10, angle: 90}
   - left_arc: {radius: 10, angle: 45}
+  - cubic_bezier: {p1: [5, 10], p2: [10, -5], p3: [10, 10]}

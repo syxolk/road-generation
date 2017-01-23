@@ -18,10 +18,18 @@ class Primitive:
         return polygon
 
     def get_beginning(self):
-        raise NotImplementedError()
+        points = self.get_points()
+        p1 = np.array(points[0])
+        p2 = np.array(points[1])
+        dir = p1 - p2
+        return (p1, math.atan2(dir[1], dir[0]))
 
     def get_ending(self):
-        raise NotImplementedError()
+        points = self.get_points()
+        p1 = np.array(points[-1])
+        p2 = np.array(points[-2])
+        dir = p1 - p2
+        return (p1, math.atan2(dir[1], dir[0]))
 
 class TransrotPrimitive(Primitive):
     def __init__(self, child, translation, angle):
@@ -128,19 +136,24 @@ class RightCircularArc(Primitive):
             - self._radius + math.sin(math.pi/2 - self._angle) * self._radius
         ]), - self._angle)
 
-class QuadBezier(Primitive): #TODO noch nicht fertig
-    def __init__(self, p1, p2):
+class CubicBezier(Primitive):
+    def __init__(self, p1, p2, p3):
         self._p0 = np.array([0, 0])
-        self._p1 = p1
-        self._p2 = p2
+        self._p1 = np.array(p1)
+        self._p2 = np.array(p2)
+        self._p3 = np.array(p3)
 
-    def get_points(self):
-        points = []
+        self._points = []
         t = 0
         while t <= 1:
-            a = (1-t) * self._p0 + t * self._p1
-            b = (1-t) * self._p1 + t * self._p2
-            x = (1-t) * a + t * b
-            points.append(x)
+            c0 = (1-t) * self._p0 + t * self._p1
+            c1 = (1-t) * self._p1 + t * self._p2
+            c2 = (1-t) * self._p2 + t * self._p3
+            d0 = (1-t) * c0 + t * c1
+            d1 = (1-t) * c1 + t * c2
+            x = (1-t) * d0 + t * d1
+            self._points.append(x)
             t += 0.01
-        return np.array(points)
+
+    def get_points(self):
+        return self._points
