@@ -1,6 +1,6 @@
 TODO
-- [ ] Klothoide
+- [x] Klothoide
 - [ ] Ende-Anfang-Verbindung
 - [ ] Evolut. Algorithmen
-- [ ] Überschneidung
+- [x] Überschneidung
 - [x] bessere Fitness

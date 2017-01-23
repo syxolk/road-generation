@@ -6,6 +6,26 @@ import scipy.integrate as integrate
 class MissingPointsException(Exception):
     pass
 
+def circle_from_points(x1, y1, x2, y2, x3, y3):
+    s1 = np.array([[y2 - y1], [- (x2 - x1)]])
+    s2 = np.array([[y3 - y2], [- (x3 - x2)]])
+    mid1 = 0.5*np.array([[x1 + x2], [y1 + y2]])
+    mid2 = 0.5*np.array([[x2 + x3], [y2 + y3]])
+    b = mid2 - mid1
+    A = np.hstack((s1, s2))
+    if np.linalg.matrix_rank(A) == 2 :
+        result = np.linalg.solve(A, b)
+        circle_mid = mid1 + result[0] * s1
+        radius = np.linalg.norm(circle_mid - [[x1], [y1]])
+        return (circle_mid, radius)
+    else:
+        return None
+
+def is_left(a, b, c):
+    x = b - a
+    y = c - a
+    return np.cross(x, y) > 0
+
 class Primitive:
     def get_points(self):
         return []
@@ -23,14 +43,22 @@ class Primitive:
         p1 = np.array(points[0])
         p2 = np.array(points[1])
         dir = p1 - p2
-        return (p1, math.atan2(dir[1], dir[0]))
+        circle_mid, radius = circle_from_points(points[0][0], points[0][1],
+            points[1][0], points[1][1], points[2][0], points[2][1])
+        if not is_left(np.array(points[1]), np.array(points[0]), circle_mid.reshape(2)):
+            radius = - radius # rechtskrümmung
+        return (p1, math.atan2(dir[1], dir[0]), 1 / radius)
 
     def get_ending(self):
         points = self.get_points()
         p1 = np.array(points[-1])
         p2 = np.array(points[-2])
         dir = p1 - p2
-        return (p1, math.atan2(dir[1], dir[0]))
+        circle_mid, radius = circle_from_points(points[-1][0], points[-1][1],
+            points[-2][0], points[-2][1], points[-3][0], points[-3][1])
+        if not is_left(np.array(points[-2]), np.array(points[-1]), circle_mid.reshape(2)):
+            radius = - radius # rechtskrümmung
+        return (p1, math.atan2(dir[1], dir[0]), 1 / radius)
 
 class TransrotPrimitive(Primitive):
     def __init__(self, child, translation, angle):
