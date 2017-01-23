@@ -4,7 +4,7 @@ import math
 import matplotlib.pyplot as plt
 import numpy as np
 import random
-import heapq
+import sys
 
 def norm_angle(angle):
     while angle > 2 * math.pi:
@@ -36,6 +36,15 @@ def generate_road(primitives, padding):
 
     return new_primitives
 
+def check_intersections(road, road_width):
+    for i in range(len(road)-1):
+        for j in range(i+1, len(road)):
+            p1 = road[i].get_bounding_box(road_width)
+            p2 = road[j].get_bounding_box(road_width)
+            if p1.intersects(p2):
+                return True
+    return False
+
 class Fitness:
     def __init__(self, target_distance):
         self._target_distance = target_distance
@@ -60,14 +69,14 @@ def render_road(primitives):
     plt.show()
 
 if __name__ == "__main__":
-    preset = preset_parser.parse("presets/round_rect.yml")
+    preset = preset_parser.parse(sys.argv[1])
     primitives = preset.primitives
 
     heap = []
     f = Fitness(1)
-    for i in range(1000):
+    for i in range(10000):
         random.shuffle(primitives)
-        road = generate_road(primitives, 1)
+        road = generate_road(primitives, 2)
         h = f.fitness(road)
         heap.append((h, road))
 
@@ -75,5 +84,12 @@ if __name__ == "__main__":
     heap.sort(key=lambda x: x[0])
 
     # render best three
-    for i in range(3):
-        render_road(heap[i][1])
+    best_n = 3
+    for i in range(len(heap)):
+        if check_intersections(heap[i][1], preset.road_width):
+            continue
+        else:
+            render_road(heap[i][1])
+            best_n -= 1
+            if best_n == 0:
+                break

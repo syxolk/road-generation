@@ -1,5 +1,6 @@
 import numpy as np
 import math
+from shapely.geometry import LineString, CAP_STYLE, JOIN_STYLE
 
 class MissingPointsException(Exception):
     pass
@@ -8,14 +9,13 @@ class Primitive:
     def get_points(self):
         return []
 
-    def get_bounding_box(self):
+    def get_bounding_box(self, street_width):
         points = self.get_points()
         if len(points) == 0:
             raise MissingPointsException("get_points() returned empty array")
-        return (
-            [np.min(self.get_points()[:][0]), np.min(self.get_points()[:][1])],
-            [np.max(self.get_points()[:][0]), np.max(self.get_points()[:][1])]
-        )
+        line = LineString(points)
+        polygon = line.buffer(street_width, cap_style=CAP_STYLE.flat, join_style=JOIN_STYLE.round)
+        return polygon
 
     def get_beginning(self):
         raise NotImplementedError()
@@ -44,13 +44,6 @@ class TransrotPrimitive(Primitive):
 
     def _transform_point(self, point):
         return (self._get_matrix().dot(np.append(point, 1)))[0:2]
-
-    def get_bounding_box(self):
-        bb = self._child.get_bounding_box()
-        return (
-            self._transform_point(bb[0]),
-            self._transform_point(bb[1])
-        )
 
     def get_points(self):
         return list(map(self._transform_point, self._child.get_points()))
@@ -85,7 +78,7 @@ class LeftCircularArc(Primitive):
         self._angle = angle
 
     def __repr__(self):
-        return "CircularArc(radius={}, angle={})".format(self._radius, self._angle)
+        return "LeftCircularArc(radius={}, angle={})".format(self._radius, self._angle)
 
     def get_points(self):
         points = []

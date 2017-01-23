@@ -22,7 +22,7 @@ def parse(path):
                 p["right_arc"]["radius"],
                 math.radians(p["right_arc"]["angle"])))
         elif "left_arc" in p:
-            preset.primitives.append(primitive.RightCircularArc(
+            preset.primitives.append(primitive.LeftCircularArc(
                 p["left_arc"]["radius"],
                 math.radians(p["left_arc"]["angle"])))
         else:
