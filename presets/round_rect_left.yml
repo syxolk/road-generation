@@ -1,0 +1,10 @@
+road_width: 1
+primitives:
+  - straight_line: {length: 5}
+  - straight_line: {length: 5}
+  - straight_line: {length: 5}
+  - straight_line: {length: 5}
+  - left_arc: {radius: 10, angle: 90}
+  - left_arc: {radius: 10, angle: 90}
+  - left_arc: {radius: 10, angle: 90}
+  - left_arc: {radius: 10, angle: 90}

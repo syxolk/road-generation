@@ -1,0 +1,3 @@
+road_width: 1
+primitives:
+  - left_arc: {radius: 10, angle: 45}
