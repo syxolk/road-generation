@@ -13,14 +13,14 @@ def norm_angle(angle):
         angle += 2 * math.pi
     return angle
 
-def generate_road(primitives_const, padding):
+def generate_road(primitives_const, padding, curv_a):
     # add clothoids
     primitives = [primitives_const[0]]
     for i in range(1, len(primitives_const)):
         end_curv = primitives_const[i-1].get_ending()[2]
         begin_curv = primitives_const[i].get_beginning()[2]
         if abs(end_curv - begin_curv) > 0.001:
-            primitives.append(primitive.Clothoid(end_curv, begin_curv, 10))
+            primitives.append(primitive.Clothoid(end_curv, begin_curv, curv_a[i-1]))
         primitives.append(primitives_const[i])
 
     new_primitives = [primitives[0]]
@@ -65,7 +65,7 @@ class Fitness:
         dist = math.sqrt(dist_vec[0]*dist_vec[0] + dist_vec[1]*dist_vec[1])
         dist_weight = abs(dist - self._target_distance) / self._target_distance
         angle_weight = norm_angle(abs(norm_angle(first_begin[1]) - norm_angle(last_end[1] + math.pi))) / (2*math.pi)
-        return dist_weight + angle_weight
+        return angle_weight
 
 def render_road(primitives):
     plt.axis('equal')
@@ -77,6 +77,37 @@ def render_road(primitives):
         plt.plot(xvalues, yvalues, linewidth=3)
     plt.show()
 
+def random_float_array(len, min, max):
+    arr = []
+    for i in range(len):
+        arr.append(random.uniform(5, 15))
+    return arr
+
+def mutate(heap):
+    mutate_heap = []
+
+    for i in range(len(heap)):
+        for j in range(10):
+            curv_a = list(map(lambda x: x + random.uniform(-2, 2), heap[i][3]))
+            road = generate_road(heap[i][2])
+            h = f.fitness(road)
+            mutate_heap.append((h, road, heap[i][2], curv_a))
+
+    mutate_heap.sort(key=lambda x: x[0])
+
+    best_n = 20
+    best_heap = []
+    for i in range(len(mutate_heap)):
+        if check_intersections(mutate_heap[i][1], preset.road_width):
+            continue
+        else:
+            best_heap.append(mutate_heap[i])
+            best_n -= 1
+            if best_n == 0:
+                break
+
+    return best_heap
+
 if __name__ == "__main__":
     preset = preset_parser.parse(sys.argv[1])
     primitives = preset.primitives
@@ -85,20 +116,29 @@ if __name__ == "__main__":
     f = Fitness(1)
     for i in range(1000):
         random.shuffle(primitives)
-        road = generate_road(primitives, 0)
+        curv_a = random_float_array(len(primitives), 10, 10)
+        road = generate_road(primitives, 0, curv_a)
         h = f.fitness(road)
-        heap.append((h, road))
+        heap.append((h, road, primitives, curv_a))
 
     # sort for fitness
     heap.sort(key=lambda x: x[0])
 
     # render best three
-    best_n = 3
+    best_n = 20
+    best_heap = []
     for i in range(len(heap)):
         if check_intersections(heap[i][1], preset.road_width):
             continue
         else:
-            render_road(heap[i][1])
+            best_heap.append(heap[i])
             best_n -= 1
             if best_n == 0:
                 break
+
+    # mutate
+    print("Generation {}".format(1))
+    best_heap = mutate(best_heap)
+
+    for x in mutate_heap:
+        render_road(x[1])

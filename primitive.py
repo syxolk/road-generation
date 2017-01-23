@@ -207,13 +207,13 @@ class Clothoid(Primitive):
         len_end = math.fabs(curvature_end) * a / math.sqrt(math.pi)
 
         begin_points = []
-        for l in np.arange(-len_begin, 0, 0.1):
+        for l in np.arange(-len_begin, 0, 0.01):
             p = euler_spiral(l, a)
             if curvature_begin < 0: # nach rechts drehen
                 p[1] = - p[1] # -> y-achse spiegeln
             begin_points.append(p)
         end_points = []
-        for l in np.arange(0, len_end, 0.1):
+        for l in np.arange(0, len_end, 0.01):
             p = euler_spiral(l, a)
             if curvature_end < 0:
                 p[1] = - p[1]
