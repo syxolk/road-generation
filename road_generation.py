@@ -33,7 +33,16 @@ def is_left(a, b, c):
     y = np.array(c) - np.array(a)
     return np.cross(x, y) > 0
 
-def generate_road(primitives, padding):
+def generate_road(primitives_const, padding):
+    # add clothoids
+    primitives = [primitives_const[0]]
+    for i in range(1, len(primitives_const)):
+        end_curv = primitives_const[i-1].get_ending()[2]
+        begin_curv = primitives_const[i].get_beginning()[2]
+        if abs(end_curv - begin_curv) > 0.01:
+            primitives.append(primitive.Clothoid(end_curv, begin_curv, 10))
+        primitives.append(primitives_const[i])
+
     new_primitives = [primitives[0]]
 
     for i in range(1, len(primitives)):
@@ -58,7 +67,7 @@ def generate_road(primitives, padding):
 
 def check_intersections(road, road_width):
     for i in range(len(road)-1):
-        for j in range(i+1, len(road)):
+        for j in range(i+2, len(road)):
             p1 = road[i].get_bounding_box(road_width)
             p2 = road[j].get_bounding_box(road_width)
             if p1.intersects(p2):
@@ -94,9 +103,9 @@ if __name__ == "__main__":
 
     heap = []
     f = Fitness(1)
-    for i in range(10000):
+    for i in range(1000):
         random.shuffle(primitives)
-        road = generate_road(primitives, 2)
+        road = generate_road(primitives, 0)
         h = f.fitness(road)
         heap.append((h, road))
 
