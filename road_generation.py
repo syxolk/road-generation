@@ -13,6 +13,26 @@ def norm_angle(angle):
         angle += 2 * math.pi
     return angle
 
+def circle_from_points(x1, y1, x2, y2, x3, y3):
+    s1 = np.array([[y2 - y1], [- (x2 - x1)]])
+    s2 = np.array([[y3 - y2], [- (x3 - x2)]])
+    mid1 = 0.5*np.array([[x1 + x2], [y1 + y2]])
+    mid2 = 0.5*np.array([[x2 + x3], [y2 + y3]])
+    b = mid2 - mid1
+    A = np.hstack((s1, s2))
+    if np.linalg.matrix_rank(A) == 2 :
+        result = np.linalg.solve(A, b)
+        circle_mid = mid1 + result[0] * s1
+        radius = np.linalg.norm(circle_mid - [[x1], [y1]])
+        return (circle_mid, radius)
+    else:
+        return None
+
+def is_left(a, b, c):
+    x = np.array(b) - np.array(a)
+    y = np.array(c) - np.array(a)
+    return np.cross(x, y) > 0
+
 def generate_road(primitives, padding):
     new_primitives = [primitives[0]]
 
@@ -20,7 +40,7 @@ def generate_road(primitives, padding):
         last_primitive = new_primitives[i-1]
         current_primitive = primitives[i]
 
-        (point, angle) = last_primitive.get_ending()
+        (point, angle, curv) = last_primitive.get_ending()
         target_point = point + np.array([
             math.cos(angle) * padding,
             math.sin(angle) * padding
@@ -28,7 +48,7 @@ def generate_road(primitives, padding):
         #print(target_point)
         target_angle = norm_angle(angle + math.pi)
         #print(target_angle)
-        (begin_point, begin_angle) = current_primitive.get_beginning()
+        (begin_point, begin_angle, begin_curv) = current_primitive.get_beginning()
         #print(begin_angle)
         new_primitives.append(primitive.TransrotPrimitive(current_primitive,
             target_point - begin_point, target_angle - begin_angle))

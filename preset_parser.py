@@ -6,6 +6,7 @@ class Preset:
     def __init__(self):
         # set sensitve defaults
         self.road_width = 1
+        self.default_paddding = 2
         self.primitives = []
 
 def parse(path):
@@ -29,6 +30,10 @@ def parse(path):
             data = p["cubic_bezier"]
             preset.primitives.append(primitive.CubicBezier(
                 data["p1"], data["p2"], data["p3"]))
+        elif "clothoid" in p:
+            data = p["clothoid"]
+            preset.primitives.append(primitive.Clothoid(
+                data["curv1"], data["curv2"], data["a"]))
         else:
             raise ValueError("Unknown primitive type")
     return preset

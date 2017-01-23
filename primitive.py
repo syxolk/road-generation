@@ -1,6 +1,7 @@
 import numpy as np
 import math
 from shapely.geometry import LineString, CAP_STYLE, JOIN_STYLE
+import scipy.integrate as integrate
 
 class MissingPointsException(Exception):
     pass
@@ -44,11 +45,16 @@ class TransrotPrimitive(Primitive):
     def _get_matrix(self):
         cos = math.cos(self._angle)
         sin = math.sin(self._angle)
+        begin = self._child.get_beginning()
         return np.array([
-            [cos, -sin, self._translation[0]],
-            [sin, cos, self._translation[1]],
+            [cos, -sin, self._translation[0] + begin[0][0]],
+            [sin, cos, self._translation[1] + begin[0][1]],
             [0, 0, 1]
-        ])
+        ]).dot(np.array([
+            [1, 0, -begin[0][0]],
+            [0, 1, -begin[0][1]],
+            [0, 0, 1]
+        ]))
 
     def _transform_point(self, point):
         return (self._get_matrix().dot(np.append(point, 1)))[0:2]
@@ -58,11 +64,11 @@ class TransrotPrimitive(Primitive):
 
     def get_beginning(self):
         begin = self._child.get_beginning()
-        return (self._transform_point(begin[0]), begin[1] + self._angle)
+        return (self._transform_point(begin[0]), begin[1] + self._angle, begin[2])
 
     def get_ending(self):
         end = self._child.get_ending()
-        return (self._transform_point(end[0]), end[1] + self._angle)
+        return (self._transform_point(end[0]), end[1] + self._angle, end[2])
 
 class StraightLine(Primitive):
     def __init__(self, length):
@@ -75,10 +81,10 @@ class StraightLine(Primitive):
         return [[0, 0], [self._length, 0]]
 
     def get_beginning(self):
-        return (np.array([0, 0]), math.pi)
+        return (np.array([0, 0]), math.pi, 0)
 
     def get_ending(self):
-        return (np.array([self._length, 0]), 0)
+        return (np.array([self._length, 0]), 0, 0)
 
 class LeftCircularArc(Primitive):
     def __init__(self, radius, angle):
@@ -100,13 +106,13 @@ class LeftCircularArc(Primitive):
         return points
 
     def get_beginning(self):
-        return (np.array([0, 0]), math.pi)
+        return (np.array([0, 0]), math.pi, 1 / self._radius)
 
     def get_ending(self):
         return (np.array([
             math.cos(self._angle - math.pi/2) * self._radius,
             self._radius + math.sin(self._angle - math.pi/2) * self._radius
-        ]), self._angle)
+        ]), self._angle, - 1 / self._radius)
 
 class RightCircularArc(Primitive):
     def __init__(self, radius, angle):
@@ -128,13 +134,13 @@ class RightCircularArc(Primitive):
         return points
 
     def get_beginning(self):
-        return (np.array([0, 0]), math.pi)
+        return (np.array([0, 0]), math.pi, - 1 / self._radius)
 
     def get_ending(self):
         return (np.array([
             math.cos(math.pi/2 - self._angle) * self._radius,
             - self._radius + math.sin(math.pi/2 - self._angle) * self._radius
-        ]), - self._angle)
+        ]), - self._angle, 1 / self._radius)
 
 class CubicBezier(Primitive):
     def __init__(self, p1, p2, p3):
@@ -157,3 +163,42 @@ class CubicBezier(Primitive):
 
     def get_points(self):
         return self._points
+
+def euler_spiral(l, A):
+    factor = A * math.sqrt(math.pi)
+    return [factor * integrate.quad(lambda t: math.cos(math.pi * t * t / 2), 0, l)[0],
+        factor * integrate.quad(lambda t: math.sin(math.pi * t * t / 2), 0, l)[0]]
+
+class Clothoid(Primitive):
+    def __init__(self, curvature_begin, curvature_end, a):
+        self._curv_begin = curvature_begin
+        self._curv_end = curvature_end
+        self._a = a # clothoid parameter A
+
+        len_begin = math.fabs(curvature_begin) * a / math.sqrt(math.pi)
+        len_end = math.fabs(curvature_end) * a / math.sqrt(math.pi)
+
+        begin_points = []
+        for l in np.arange(-len_begin, 0, 0.01):
+            p = euler_spiral(l, a)
+            if curvature_begin < 0: # nach rechts drehen
+                p[1] = - p[1] # -> y-achse spiegeln
+            begin_points.append(p)
+        end_points = []
+        for l in np.arange(0, len_end, 0.01):
+            p = euler_spiral(l, a)
+            if curvature_end < 0:
+                p[1] = - p[1]
+            end_points.append(p)
+        self._points = begin_points + end_points
+
+    def get_points(self):
+        return self._points
+
+    def get_beginning(self):
+        dir = np.array(self._points[0]) - np.array(self._points[1])
+        return (np.array(self._points[0]), math.atan2(dir[1], dir[0]), self._curv_begin)
+
+    def get_ending(self):
+        dir = np.array(self._points[-1]) - np.array(self._points[-2])
+        return (np.array(self._points[-1]), math.atan2(dir[1], dir[0]), self._curv_end)
