@@ -232,3 +232,39 @@ class Clothoid(Primitive):
     def get_ending(self):
         dir = np.array(self._points[-1]) - np.array(self._points[-2])
         return (np.array(self._points[-1]), math.atan2(dir[1], dir[0]), self._curv_end)
+
+class LeftTurnCrossing(Primitive):
+    def __init__(self, size):
+        self._size = size
+        self._points = [
+            [0, -size],
+            [0, 0],
+            [-size, 0]
+        ]
+
+    def get_points(self):
+        return self._points
+
+    def get_beginning(self):
+        return (np.array([0, -self._size]), 1.5 * math.pi, 0)
+
+    def get_ending(self):
+        return (np.array([-self._size, 0]), math.pi, 0)
+
+class RightTurnCrossing(Primitive):
+    def __init__(self, size):
+        self._size = size
+        self._points = [
+            [0, -size],
+            [0, 0],
+            [size, 0]
+        ]
+
+    def get_points(self):
+        return self._points
+
+    def get_beginning(self):
+        return (np.array([0, -self._size]), 1.5 * math.pi, 0)
+
+    def get_ending(self):
+        return (np.array([self._size, 0]), 0, 0)

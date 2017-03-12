@@ -14,3 +14,6 @@ primitives:
   - left_arc: {radius: 20, angle: 90}
   - left_arc: {radius: 10, angle: 45}
   - cubic_bezier: {p1: [5, 10], p2: [10, -5], p3: [10, 10]}
+  - left_turn_crossing: {size: 10}
+  - right_turn_crossing: {size: 10}
+  - right_turn_crossing: {size: 10}

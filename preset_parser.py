@@ -34,6 +34,14 @@ def parse(path):
             data = p["clothoid"]
             preset.primitives.append(primitive.Clothoid(
                 data["curv1"], data["curv2"], data["a"]))
+        elif "left_turn_crossing" in p:
+            data = p["left_turn_crossing"]
+            preset.primitives.append(primitive.LeftTurnCrossing(
+                data["size"]))
+        elif "right_turn_crossing" in p:
+            data = p["right_turn_crossing"]
+            preset.primitives.append(primitive.RightTurnCrossing(
+                data["size"]))
         else:
             raise ValueError("Unknown primitive type")
     return preset
