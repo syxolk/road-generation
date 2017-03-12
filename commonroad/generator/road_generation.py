@@ -75,6 +75,7 @@ def render_road(primitives):
         xvalues = list(map(lambda c: c[0], points))
         yvalues = list(map(lambda c: c[1], points))
         plt.plot(xvalues, yvalues, linewidth=3)
+    plt.savefig("bla.png")
     plt.show()
 
 def random_float_array(len, min, max):
@@ -112,33 +113,15 @@ if __name__ == "__main__":
     preset = preset_parser.parse(sys.argv[1])
     primitives = preset.primitives
 
-    heap = []
-    f = Fitness(1)
-    for i in range(1000):
+    road = None
+    while True:
+        sys.stdout.write(".")
+        sys.stdout.flush()
         random.shuffle(primitives)
         curv_a = random_float_array(len(primitives), 10, 10)
         road = generate_road(primitives, 0, curv_a)
-        h = f.fitness(road)
-        heap.append((h, road, primitives, curv_a))
+        if not check_intersections(road, preset.road_width):
+            break
+    print()
 
-    # sort for fitness
-    heap.sort(key=lambda x: x[0])
-
-    # render best three
-    best_n = 20
-    best_heap = []
-    for i in range(len(heap)):
-        if check_intersections(heap[i][1], preset.road_width):
-            continue
-        else:
-            best_heap.append(heap[i])
-            best_n -= 1
-            if best_n == 0:
-                break
-
-    # mutate
-    print("Generation {}".format(1))
-    best_heap = mutate(best_heap)
-
-    for x in mutate_heap:
-        render_road(x[1])
+    render_road(road)
