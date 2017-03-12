@@ -1,23 +1,5 @@
 from functools import reduce
 
-class BoundingBox:
-    def __init__(self, x_min, y_min, x_max, y_max):
-        self.x_min = x_min
-        self.y_min = y_min
-        self.x_max = x_max
-        self.y_max = y_max
-
-    def union(self, box):
-        return BoundingBox(
-            min(self.x_min, box.x_min),
-            min(self.y_min, box.y_min),
-            max(self.x_max, box.x_max),
-            max(self.y_max, box.y_max))
-
-    def __repr__(self):
-        return "BoundingBox({0}, {1}, {2}, {3})".format(self.x_min, self.y_min,
-            self.x_max, self.y_max)
-
 class Point:
     def __init__(self, x=0, y=0):
         self.x = x
@@ -25,6 +7,17 @@ class Point:
 
     def __repr__(self):
         return "Point({0}, {1})".format(self.x, self.y)
+
+class Rectangle:
+    def __init__(self, length=0, width=0, orientation=0, center_point=None):
+        self.length = length
+        self.width = width
+        self.orientation = orientation
+        self.center_point = center_point
+
+    def __repr__(self):
+        return "Rectangle(l={0}, w={1}, o={2}, cp={3})".format(self.length, self.width,
+            self.orientation, self.center_point)
 
 class Lanelet:
     def __init__(self, left_boundary, right_boundary, left_boundary_marking, right_boundary_marking):
@@ -41,6 +34,12 @@ class Lanelet:
     def __repr__(self):
         return "Lanelet({0}, {1})".format(self.left_boundary,
             self.right_boundary)
+
+class Obstacle:
+    def __init__(self, role="", type=""):
+        self.role = role
+        self.type = type
+        self.shape = []
 
 class CommonRoad:
     def __init__(self):

@@ -1,9 +1,18 @@
 from lxml import etree
-from commonroad import CommonRoad, Point, Lanelet
+from commonroad import CommonRoad, Point, Lanelet, Obstacle, Rectangle
 
 class Parser:
     def __init__(self):
         pass
+
+    def parse_rectangle(self, node):
+        return Rectangle(
+            length=float(node.find("length").text),
+            width=float(node.find(""))
+        )
+
+    def parse_shape(self, node):
+
 
     def parse(self, file):
         tree = etree.parse(file)
@@ -28,6 +37,10 @@ class Parser:
                 if child.find("rightBoundary").find("lineMarking") is not None:
                     right_line_marking = child.find("rightBoundary").find("lineMarking").text
                 road_element = Lanelet(left, right, left_line_marking, right_line_marking)
+            elif child.tag == "obstacle":
+                road_element = Obstacle(
+                    role=child.find("role").text,
+                    type=child.find("type").text)
 
             if road_element is not None:
                 road.add(id, road_element)

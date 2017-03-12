@@ -1,26 +1,25 @@
-from parser import Parser
 import cairo
 import math
+from commonroad import utils
 
 PIXEL_PER_UNIT = 5000
 
-def draw_boundary(ctx, points, marking):
-    if marking is None:
+def draw_boundary(ctx, boundary):
+    if boundary.lineMarking is None:
         return
     ctx.set_line_width (0.02)
-    if marking == "dashed":
+    if boundary.lineMarking == "dashed":
         ctx.set_dash([0.2, 0.2])
 
-    ctx.move_to(points[0].x, points[0].y)
-    for p in points:
+    ctx.move_to(boundary.point[0].x, boundary.point[0].y)
+    for p in boundary.point:
         ctx.line_to(p.x, p.y)
 
     ctx.stroke()
 
-if __name__ == "__main__":
-    parser = Parser()
-    road = parser.parse("/home/hans/workspace/thesis/extras/example_lanelet.xml")
-    bounding_box = road.get_bounding_box()
+def draw(doc):
+    bounding_box = utils.get_bounding_box(doc)
+    print(bounding_box)
 
     width = math.ceil((bounding_box.x_max - bounding_box.x_min) * PIXEL_PER_UNIT)
     height = math.ceil((bounding_box.y_max - bounding_box.y_min) * PIXEL_PER_UNIT)
@@ -38,8 +37,8 @@ if __name__ == "__main__":
     ctx.fill()
 
     ctx.set_source_rgb(1, 1, 1)
-    for lanelet in road.get_lanelets():
-        draw_boundary(ctx, lanelet.left_boundary, lanelet.left_boundary_marking)
-        draw_boundary(ctx, lanelet.right_boundary, lanelet.right_boundary_marking)
+    for lanelet in doc.lanelet:
+        draw_boundary(ctx, lanelet.leftBoundary)
+        draw_boundary(ctx, lanelet.rightBoundary)
 
-    surface.write_to_png("example.png")
+    return surface
