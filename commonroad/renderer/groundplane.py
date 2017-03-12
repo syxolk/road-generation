@@ -3,6 +3,7 @@ import math
 from commonroad import utils
 
 PIXEL_PER_UNIT = 1000
+PADDING = 0.5
 
 def draw_boundary(ctx, boundary):
     if boundary.lineMarking is None:
@@ -62,6 +63,10 @@ def draw_obstacle(ctx, obstacle):
 
 def draw(doc):
     bounding_box = utils.get_bounding_box(doc)
+    bounding_box.x_min -= PADDING
+    bounding_box.y_min -= PADDING
+    bounding_box.x_max += PADDING
+    bounding_box.y_max += PADDING
     print(bounding_box)
 
     width = math.ceil((bounding_box.x_max - bounding_box.x_min) * PIXEL_PER_UNIT)
