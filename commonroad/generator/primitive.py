@@ -70,12 +70,15 @@ class Primitive:
         lanelet1.leftBoundary.lineMarking = "dashed"
         lanelet2.rightBoundary.lineMarking = "solid"
 
-        for i in range(len(points)-1):
-            p1 = np.array(points[i])
-            p2 = np.array(points[i+1])
-            ortho_left = np.array([-(p2[1] - p1[1]), p2[0] - p1[0]])
-            ortho_left = ortho_left / np.linalg.norm(ortho_left) * config.road_width
-            ortho_right = ortho_left * (-1)
+        for i in range(len(points)):
+            if i != len(points) - 1:
+                p1 = np.array(points[i])
+                p2 = np.array(points[i+1])
+                ortho_left = np.array([-(p2[1] - p1[1]), p2[0] - p1[0]])
+                ortho_left = ortho_left / np.linalg.norm(ortho_left) * config.road_width
+                ortho_right = ortho_left * (-1)
+            else:
+                p1 = np.array(points[i])
 
             left = p1 + ortho_left
             right = p1 + ortho_right
