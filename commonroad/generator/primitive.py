@@ -137,7 +137,6 @@ class TransrotPrimitive(Primitive):
         objects = self._child.export(config)
 
         for obj in objects:
-            print("translate")
             if isinstance(obj, schema.lanelet):
                 for i in range(len(obj.leftBoundary.point)):
                     x = obj.leftBoundary.point[i].x

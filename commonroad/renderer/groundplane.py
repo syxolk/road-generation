@@ -1,8 +1,13 @@
-import cairo
+#import cairo
+import cairocffi as cairo
 import math
 from commonroad import utils
+from os import path
+import os
+import hashlib
 
-PIXEL_PER_UNIT = 100
+PIXEL_PER_UNIT = 1000
+TILE_SIZE = 1000
 PADDING = 0.5
 
 def draw_boundary(ctx, boundary):
@@ -61,7 +66,7 @@ def draw_shape(ctx, shape):
 def draw_obstacle(ctx, obstacle):
     draw_shape(ctx, obstacle.shape)
 
-def draw(doc):
+def draw(doc, target_dir):
     bounding_box = utils.get_bounding_box(doc)
     bounding_box.x_min -= PADDING
     bounding_box.y_min -= PADDING
@@ -72,25 +77,133 @@ def draw(doc):
     width = math.ceil((bounding_box.x_max - bounding_box.x_min) * PIXEL_PER_UNIT)
     height = math.ceil((bounding_box.y_max - bounding_box.y_min) * PIXEL_PER_UNIT)
 
-    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
-    ctx = cairo.Context(surface)
+    width_num = math.ceil(width / TILE_SIZE)
+    height_num = math.ceil(height / TILE_SIZE)
 
-    ctx.scale(PIXEL_PER_UNIT, PIXEL_PER_UNIT)
-    ctx.translate(-bounding_box.x_min, -bounding_box.y_min)
+    surfaces = dict()
+    for x in range(width_num):
+        for y in range(height_num):
+            print("{0}, {1}".format(x, y))
+            surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, TILE_SIZE, TILE_SIZE)
+            ctx = cairo.Context(surface)
 
-    ctx.set_source_rgb(0, 0, 0) # black
-    ctx.rectangle(bounding_box.x_min, bounding_box.y_min,
-        bounding_box.x_max - bounding_box.x_min,
-        bounding_box.y_max - bounding_box.y_min)
-    ctx.fill()
+            ctx.set_source_rgb(0, 0, 0)
+            ctx.rectangle(0, 0, TILE_SIZE, TILE_SIZE)
+            ctx.fill()
 
-    ctx.set_source_rgb(1, 1, 1)
-    for lanelet in doc.lanelet:
-        draw_boundary(ctx, lanelet.leftBoundary)
-        draw_boundary(ctx, lanelet.rightBoundary)
-        draw_stop_line(ctx, lanelet)
+            ctx.scale(PIXEL_PER_UNIT, PIXEL_PER_UNIT)
+            ctx.translate(-bounding_box.x_min, -bounding_box.y_min)
+            ctx.translate(- x * TILE_SIZE / PIXEL_PER_UNIT, - y * TILE_SIZE / PIXEL_PER_UNIT)
 
-    for obstacle in doc.obstacle:
-        draw_obstacle(ctx, obstacle)
+            ctx.set_source_rgb(1, 1, 1)
+            for lanelet in doc.lanelet:
+                draw_boundary(ctx, lanelet.leftBoundary)
+                draw_boundary(ctx, lanelet.rightBoundary)
+                draw_stop_line(ctx, lanelet)
 
-    return surface
+            for obstacle in doc.obstacle:
+                draw_obstacle(ctx, obstacle)
+
+            surfaces[(x,y)] = surface
+
+    os.makedirs(path.join(target_dir, "materials", "textures"), exist_ok=True)
+    os.makedirs(path.join(target_dir, "materials", "scripts"), exist_ok=True)
+
+    tile_hash = dict()
+    models = ""
+    for key in surfaces:
+        sha_1 = hashlib.sha1()
+        sha_1.update(surfaces[key].get_data())
+        hash = sha_1.hexdigest()
+
+        tile_hash[key] = hash
+        texture_file = "tile-{0}.png".format(hash)
+        material_file = "tile-{0}.material".format(hash)
+        surfaces[key].write_to_png(
+            path.join(target_dir, "materials", "textures", texture_file))
+
+        with open(path.join(target_dir, "materials", "scripts", material_file), "w") as file:
+            file.write(ground_plane_material("Tile/" + hash, texture_file))
+
+        models += ground_plane_model(
+            bounding_box.x_min + (key[0] + 0.5) * TILE_SIZE / PIXEL_PER_UNIT,
+            bounding_box.y_min + (key[1] + 0.5) * TILE_SIZE / PIXEL_PER_UNIT,
+            TILE_SIZE / PIXEL_PER_UNIT,
+            "Tile/" + hash)
+
+    return models
+
+def ground_plane_material(name, file):
+    return """
+    material {name}
+    {{
+        technique
+        {{
+            pass
+            {{
+                ambient 0.5 0.5 0.5 1.0
+                diffuse 1.0 1.0 1.0 1.0
+                specular 0.0 0.0 0.0 1.0 0.5
+
+                texture_unit
+                {{
+                    texture {file}
+                    filtering trilinear
+                }}
+            }}
+        }}
+    }}
+    """.format(name=name, file=file)
+
+def ground_plane_model(x, y, tile_size, name):
+    return """
+    <model name='{name}'>
+      <static>1</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>{tile_size} {tile_size}</size>
+            </plane>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>100</mu>
+                <mu2>50</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='visual'>
+          <cast_shadows>0</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>{tile_size} {tile_size}</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://mygroundplane/materials/scripts</uri>
+              <uri>model://mygroundplane/materials/textures</uri>
+              <name>{name}</name>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <pose frame=''>{x} {y} 0 0 -0 0</pose>
+    </model>
+    """.format(x=x, y=y, tile_size=tile_size, name=name)
