@@ -2,6 +2,7 @@ import numpy as np
 import math
 from shapely.geometry import LineString, CAP_STYLE, JOIN_STYLE
 import scipy.integrate as integrate
+from commonroad import schema
 
 class MissingPointsException(Exception):
     pass
@@ -59,6 +60,37 @@ class Primitive:
         if not is_left(np.array(points[-2]), np.array(points[-1]), circle_mid.reshape(2)):
             radius = - radius # rechtskrümmung
         return (p1, math.atan2(dir[1], dir[0]), 1 / radius)
+
+    def export(self, config):
+        points = self.get_points()
+        lanelet1 = schema.lanelet(leftBoundary=schema.boundary(), rightBoundary=schema.boundary())
+        lanelet2 = schema.lanelet(leftBoundary=schema.boundary(), rightBoundary=schema.boundary())
+
+        lanelet1.rightBoundary.lineMarking = "solid"
+        lanelet1.leftBoundary.lineMarking = "dashed"
+        lanelet2.rightBoundary.lineMarking = "solid"
+
+        for i in range(len(points)-1):
+            p1 = np.array(points[i])
+            p2 = np.array(points[i+1])
+            ortho_left = np.array([-(p2[1] - p1[1]), p2[0] - p1[0]])
+            ortho_left = ortho_left / np.linalg.norm(ortho_left) * config.road_width
+            ortho_right = ortho_left * (-1)
+
+            left = p1 + ortho_left
+            right = p1 + ortho_right
+
+            lanelet1.leftBoundary.point.append(
+                schema.point(x=points[i][0], y=points[i][1]))
+            lanelet1.rightBoundary.point.append(
+                schema.point(x=right[0], y=right[1]))
+            lanelet2.leftBoundary.point.append(
+                schema.point(x=points[i][0], y=points[i][1]))
+            lanelet2.rightBoundary.point.append(
+                schema.point(x=left[0], y=left[1]))
+        # TODO add last point
+
+        return [lanelet1, lanelet2]
 
 class TransrotPrimitive(Primitive):
     def __init__(self, child, translation, angle):

@@ -1,5 +1,4 @@
-import primitive
-import preset_parser
+from commonroad.generator import primitive, preset_parser
 import math
 import matplotlib.pyplot as plt
 import numpy as np
@@ -109,8 +108,7 @@ def mutate(heap):
 
     return best_heap
 
-if __name__ == "__main__":
-    preset = preset_parser.parse(sys.argv[1])
+def generate(preset):
     primitives = preset.primitives
 
     road = None
@@ -124,4 +122,5 @@ if __name__ == "__main__":
             break
     print()
 
-    render_road(road)
+    #render_road(road)
+    return primitives

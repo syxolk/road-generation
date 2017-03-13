@@ -1,5 +1,5 @@
 import ruamel.yaml as yaml
-import primitive
+from commonroad.generator import primitive
 import math
 
 class Preset:
