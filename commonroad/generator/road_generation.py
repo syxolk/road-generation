@@ -122,5 +122,5 @@ def generate(preset):
             break
     print()
 
-    #render_road(road)
-    return primitives
+    render_road(road)
+    return road

@@ -2,7 +2,7 @@ import cairo
 import math
 from commonroad import utils
 
-PIXEL_PER_UNIT = 1000
+PIXEL_PER_UNIT = 100
 PADDING = 0.5
 
 def draw_boundary(ctx, boundary):

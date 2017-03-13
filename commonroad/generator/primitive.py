@@ -130,6 +130,27 @@ class TransrotPrimitive(Primitive):
         end = self._child.get_ending()
         return (self._transform_point(end[0]), end[1] + self._angle, end[2])
 
+    def export(self, config):
+        objects = self._child.export(config)
+
+        for obj in objects:
+            print("translate")
+            if isinstance(obj, schema.lanelet):
+                for i in range(len(obj.leftBoundary.point)):
+                    x = obj.leftBoundary.point[i].x
+                    y = obj.leftBoundary.point[i].y
+                    transformed = self._transform_point([x, y])
+                    obj.leftBoundary.point[i].x = transformed[0]
+                    obj.leftBoundary.point[i].y = transformed[1]
+                for i in range(len(obj.rightBoundary.point)):
+                    x = obj.rightBoundary.point[i].x
+                    y = obj.rightBoundary.point[i].y
+                    transformed = self._transform_point([x, y])
+                    obj.rightBoundary.point[i].x = transformed[0]
+                    obj.rightBoundary.point[i].y = transformed[1]
+
+        return objects
+
 class StraightLine(Primitive):
     def __init__(self, length):
         self._length = length
