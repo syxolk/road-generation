@@ -7,9 +7,9 @@ import os
 import hashlib
 import sys
 
-PIXEL_PER_UNIT = 1000
-TILE_SIZE = 1000
-PADDING = 1
+PIXEL_PER_UNIT = 500
+TILE_SIZE = 2048
+PADDING = 3
 
 def draw_boundary(ctx, boundary):
     if boundary.lineMarking is None:
@@ -82,9 +82,16 @@ def draw(doc, target_dir):
     width_num = math.ceil(width / TILE_SIZE)
     height_num = math.ceil(height / TILE_SIZE)
 
-    surfaces = dict()
+    os.makedirs(path.join(target_dir, "materials", "textures"), exist_ok=True)
+    os.makedirs(path.join(target_dir, "materials", "scripts"), exist_ok=True)
+
+    models = ""
+
     for x in range(width_num):
         for y in range(height_num):
+            sys.stdout.write(".")
+            sys.stdout.flush()
+
             surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, TILE_SIZE, TILE_SIZE)
             ctx = cairo.Context(surface)
 
@@ -111,34 +118,23 @@ def draw(doc, target_dir):
             for obstacle in doc.obstacle:
                 draw_obstacle(ctx, obstacle)
 
-            surfaces[(x,y)] = surface
+            sha_1 = hashlib.sha1()
+            sha_1.update(surface.get_data())
+            hash = sha_1.hexdigest()
 
-    os.makedirs(path.join(target_dir, "materials", "textures"), exist_ok=True)
-    os.makedirs(path.join(target_dir, "materials", "scripts"), exist_ok=True)
+            texture_file = "tile-{0}.png".format(hash)
+            material_file = "tile-{0}.material".format(hash)
+            surface.write_to_png(
+                path.join(target_dir, "materials", "textures", texture_file))
 
-    tile_hash = dict()
-    models = ""
-    for key in surfaces:
-        sys.stdout.write(".")
-        sys.stdout.flush()
-        sha_1 = hashlib.sha1()
-        sha_1.update(surfaces[key].get_data())
-        hash = sha_1.hexdigest()
+            with open(path.join(target_dir, "materials", "scripts", material_file), "w") as file:
+                file.write(ground_plane_material("Tile/" + hash, texture_file))
 
-        tile_hash[key] = hash
-        texture_file = "tile-{0}.png".format(hash)
-        material_file = "tile-{0}.material".format(hash)
-        surfaces[key].write_to_png(
-            path.join(target_dir, "materials", "textures", texture_file))
-
-        with open(path.join(target_dir, "materials", "scripts", material_file), "w") as file:
-            file.write(ground_plane_material("Tile/" + hash, texture_file))
-
-        models += ground_plane_model(
-            bounding_box.x_min + (key[0] + 0.5) * TILE_SIZE / PIXEL_PER_UNIT,
-            bounding_box.y_min + (key[1] + 0.5) * TILE_SIZE / PIXEL_PER_UNIT,
-            TILE_SIZE / PIXEL_PER_UNIT,
-            "Tile/" + hash)
+            models += ground_plane_model(
+                bounding_box.x_min + (x + 0.5) * TILE_SIZE / PIXEL_PER_UNIT,
+                bounding_box.y_min + (y + 0.5) * TILE_SIZE / PIXEL_PER_UNIT,
+                TILE_SIZE / PIXEL_PER_UNIT,
+                "Tile/" + hash)
 
     sys.stdout.write("\n")
     return models
