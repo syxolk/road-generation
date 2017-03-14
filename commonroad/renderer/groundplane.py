@@ -96,7 +96,7 @@ def draw(doc, target_dir):
             # Inverse y-axis
             ctx.translate(0, TILE_SIZE / 2)
             ctx.scale(1, -1)
-            ctx.translate(0, TILE_SIZE / 2)
+            ctx.translate(0, -TILE_SIZE / 2)
 
             ctx.scale(PIXEL_PER_UNIT, PIXEL_PER_UNIT)
             ctx.translate(-bounding_box.x_min, -bounding_box.y_min)
