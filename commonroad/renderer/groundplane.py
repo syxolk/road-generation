@@ -5,10 +5,11 @@ from commonroad import utils
 from os import path
 import os
 import hashlib
+import sys
 
 PIXEL_PER_UNIT = 1000
 TILE_SIZE = 1000
-PADDING = 0.5
+PADDING = 1
 
 def draw_boundary(ctx, boundary):
     if boundary.lineMarking is None:
@@ -68,6 +69,7 @@ def draw_obstacle(ctx, obstacle):
 
 def draw(doc, target_dir):
     bounding_box = utils.get_bounding_box(doc)
+    print(bounding_box)
     bounding_box.x_min -= PADDING
     bounding_box.y_min -= PADDING
     bounding_box.x_max += PADDING
@@ -83,13 +85,18 @@ def draw(doc, target_dir):
     surfaces = dict()
     for x in range(width_num):
         for y in range(height_num):
-            print("{0}, {1}".format(x, y))
             surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, TILE_SIZE, TILE_SIZE)
             ctx = cairo.Context(surface)
 
+            # fill black
             ctx.set_source_rgb(0, 0, 0)
             ctx.rectangle(0, 0, TILE_SIZE, TILE_SIZE)
             ctx.fill()
+
+            # Inverse y-axis
+            ctx.translate(0, TILE_SIZE / 2)
+            ctx.scale(1, -1)
+            ctx.translate(0, TILE_SIZE / 2)
 
             ctx.scale(PIXEL_PER_UNIT, PIXEL_PER_UNIT)
             ctx.translate(-bounding_box.x_min, -bounding_box.y_min)
@@ -112,6 +119,8 @@ def draw(doc, target_dir):
     tile_hash = dict()
     models = ""
     for key in surfaces:
+        sys.stdout.write(".")
+        sys.stdout.flush()
         sha_1 = hashlib.sha1()
         sha_1.update(surfaces[key].get_data())
         hash = sha_1.hexdigest()
@@ -131,6 +140,7 @@ def draw(doc, target_dir):
             TILE_SIZE / PIXEL_PER_UNIT,
             "Tile/" + hash)
 
+    sys.stdout.write("\n")
     return models
 
 def ground_plane_material(name, file):
@@ -148,7 +158,7 @@ def ground_plane_material(name, file):
                 texture_unit
                 {{
                     texture {file}
-                    filtering trilinear
+                    filtering anisotropic
                 }}
             }}
         }}
@@ -194,8 +204,8 @@ def ground_plane_model(x, y, tile_size, name):
           </geometry>
           <material>
             <script>
-              <uri>model://mygroundplane/materials/scripts</uri>
-              <uri>model://mygroundplane/materials/textures</uri>
+              <uri>file://materials/scripts</uri>
+              <uri>file://materials/textures</uri>
               <name>{name}</name>
             </script>
           </material>
