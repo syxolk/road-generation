@@ -129,6 +129,7 @@ def draw(doc, target_dir):
             bounding_box.x_min + (x + 0.5) * TILE_SIZE / PIXEL_PER_UNIT,
             bounding_box.y_min + (y + 0.5) * TILE_SIZE / PIXEL_PER_UNIT,
             TILE_SIZE / PIXEL_PER_UNIT,
+            "Tile/{0}-{1}".format(x, y),
             "Tile/" + hash)
 
     return models
@@ -155,7 +156,7 @@ def ground_plane_material(name, file):
     }}
     """.format(name=name, file=file)
 
-def ground_plane_model(x, y, tile_size, name):
+def ground_plane_model(x, y, tile_size, name, material):
     return """
     <model name='{name}'>
       <static>1</static>
@@ -196,7 +197,7 @@ def ground_plane_model(x, y, tile_size, name):
             <script>
               <uri>file://materials/scripts</uri>
               <uri>file://materials/textures</uri>
-              <name>{name}</name>
+              <name>{material}</name>
             </script>
           </material>
         </visual>
@@ -206,4 +207,4 @@ def ground_plane_model(x, y, tile_size, name):
       </link>
       <pose frame=''>{x} {y} 0 0 -0 0</pose>
     </model>
-    """.format(x=x, y=y, tile_size=tile_size, name=name)
+    """.format(x=x, y=y, tile_size=tile_size, name=name, material=material)
