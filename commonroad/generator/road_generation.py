@@ -18,8 +18,8 @@ def generate_road(primitives_const, padding, curv_a):
     for i in range(1, len(primitives_const)):
         end_curv = primitives_const[i-1].get_ending()[2]
         begin_curv = primitives_const[i].get_beginning()[2]
-        if abs(end_curv - begin_curv) > 0.001:
-            primitives.append(primitive.Clothoid(end_curv, begin_curv, curv_a[i-1]))
+        #if abs(end_curv - begin_curv) > 0.001:
+            #primitives.append(primitive.Clothoid(end_curv, begin_curv, curv_a[i-1]))
         primitives.append(primitives_const[i])
 
     new_primitives = [primitives[0]]
