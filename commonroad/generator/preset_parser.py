@@ -42,6 +42,11 @@ def parse(path):
             data = p["right_turn_crossing"]
             preset.primitives.append(primitive.RightTurnCrossing(
                 data["size"]))
+        elif "obstacle" in p:
+            data = p["obstacle"]
+            preset.primitives.append(primitive.StraightLineObstacle(
+                data["length"], data["obstacle_size"], data["lane"]
+            ))
         else:
             raise ValueError("Unknown primitive type")
     return preset

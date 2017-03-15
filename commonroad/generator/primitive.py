@@ -150,6 +150,13 @@ class TransrotPrimitive(Primitive):
                     transformed = self._transform_point([x, y])
                     obj.rightBoundary.point[i].x = transformed[0]
                     obj.rightBoundary.point[i].y = transformed[1]
+            elif isinstance(obj, schema.obstacle):
+                for rect in obj.shape.rectangle:
+                    x = rect.centerPoint.x
+                    y = rect.centerPoint.y
+                    transformed = self._transform_point([x, y])
+                    # TODO apply rotation on orientation
+                    rect.centerPoint = schema.point(x=transformed[0], y=transformed[1])
 
         return objects
 
@@ -323,3 +330,24 @@ class RightTurnCrossing(Primitive):
 
     def get_ending(self):
         return (np.array([self._size, 0]), 0, 0)
+
+class StraightLineObstacle(StraightLine):
+    def __init__(self, length, obst_size, lane):
+        super().__init__(length)
+        self._obst_size = obst_size
+        self._lane = lane
+
+    def export(self, config):
+        if self._lane == "own":
+            y = - config.road_width/2
+        else:
+            y = config.road_width/2
+        rect = schema.rectangle(length=self._obst_size,
+            width=self._obst_size, orientation=0,
+            centerPoint=schema.point(x=self._length / 2, y=y))
+        obstacle = schema.obstacle(role="static", type="car", shape=schema.shape())
+        obstacle.shape.rectangle.append(rect)
+
+        objects = super().export(config)
+        objects.append(obstacle)
+        return objects
