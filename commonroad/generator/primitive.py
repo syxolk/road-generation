@@ -155,7 +155,7 @@ class TransrotPrimitive(Primitive):
                     x = rect.centerPoint.x
                     y = rect.centerPoint.y
                     transformed = self._transform_point([x, y])
-                    rect.orientation += self._angle
+                    rect.orientation -= self._angle
                     rect.centerPoint = schema.point(x=transformed[0], y=transformed[1])
 
         return objects
