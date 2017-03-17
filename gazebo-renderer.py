@@ -5,7 +5,8 @@ import argparse, sys, os
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Generate Gazebo SDF files from CommonRoad XML")
-    parser.add_argument("--input", "-i", type=argparse.FileType("r"), default=sys.stdin)
+    parser.add_argument("input", nargs="?", type=argparse.FileType("r"),
+        default=sys.stdin)
     parser.add_argument("--output", "-o", required=True)
     parser.add_argument("--force", "-f", action="store_true")
     args = parser.parse_args()
