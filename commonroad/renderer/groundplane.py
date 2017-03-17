@@ -5,7 +5,7 @@ from commonroad import utils
 from os import path
 import os
 import hashlib
-import sys
+from tqdm import tqdm
 
 PIXEL_PER_UNIT = 500
 TILE_SIZE = 2048
@@ -69,7 +69,6 @@ def draw_obstacle(ctx, obstacle):
 
 def draw(doc, target_dir):
     bounding_box = utils.get_bounding_box(doc)
-    print(bounding_box)
     bounding_box.x_min -= PADDING
     bounding_box.y_min -= PADDING
     bounding_box.x_max += PADDING
@@ -87,56 +86,51 @@ def draw(doc, target_dir):
 
     models = ""
 
-    for x in range(width_num):
-        for y in range(height_num):
-            sys.stdout.write(".")
-            sys.stdout.flush()
+    for (x, y) in tqdm([(x,y) for x in range(width_num) for y in range(height_num)]):
+        surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, TILE_SIZE, TILE_SIZE)
+        ctx = cairo.Context(surface)
 
-            surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, TILE_SIZE, TILE_SIZE)
-            ctx = cairo.Context(surface)
+        # fill black
+        ctx.set_source_rgb(0, 0, 0)
+        ctx.rectangle(0, 0, TILE_SIZE, TILE_SIZE)
+        ctx.fill()
 
-            # fill black
-            ctx.set_source_rgb(0, 0, 0)
-            ctx.rectangle(0, 0, TILE_SIZE, TILE_SIZE)
-            ctx.fill()
+        # Inverse y-axis
+        ctx.translate(0, TILE_SIZE / 2)
+        ctx.scale(1, -1)
+        ctx.translate(0, -TILE_SIZE / 2)
 
-            # Inverse y-axis
-            ctx.translate(0, TILE_SIZE / 2)
-            ctx.scale(1, -1)
-            ctx.translate(0, -TILE_SIZE / 2)
+        ctx.scale(PIXEL_PER_UNIT, PIXEL_PER_UNIT)
+        ctx.translate(-bounding_box.x_min, -bounding_box.y_min)
+        ctx.translate(- x * TILE_SIZE / PIXEL_PER_UNIT, - y * TILE_SIZE / PIXEL_PER_UNIT)
 
-            ctx.scale(PIXEL_PER_UNIT, PIXEL_PER_UNIT)
-            ctx.translate(-bounding_box.x_min, -bounding_box.y_min)
-            ctx.translate(- x * TILE_SIZE / PIXEL_PER_UNIT, - y * TILE_SIZE / PIXEL_PER_UNIT)
+        ctx.set_source_rgb(1, 1, 1)
+        for lanelet in doc.lanelet:
+            draw_boundary(ctx, lanelet.leftBoundary)
+            draw_boundary(ctx, lanelet.rightBoundary)
+            draw_stop_line(ctx, lanelet)
 
-            ctx.set_source_rgb(1, 1, 1)
-            for lanelet in doc.lanelet:
-                draw_boundary(ctx, lanelet.leftBoundary)
-                draw_boundary(ctx, lanelet.rightBoundary)
-                draw_stop_line(ctx, lanelet)
+        for obstacle in doc.obstacle:
+            draw_obstacle(ctx, obstacle)
 
-            for obstacle in doc.obstacle:
-                draw_obstacle(ctx, obstacle)
+        sha_1 = hashlib.sha1()
+        sha_1.update(surface.get_data())
+        hash = sha_1.hexdigest()
 
-            sha_1 = hashlib.sha1()
-            sha_1.update(surface.get_data())
-            hash = sha_1.hexdigest()
+        texture_file = "tile-{0}.png".format(hash)
+        material_file = "tile-{0}.material".format(hash)
+        surface.write_to_png(
+            path.join(target_dir, "materials", "textures", texture_file))
 
-            texture_file = "tile-{0}.png".format(hash)
-            material_file = "tile-{0}.material".format(hash)
-            surface.write_to_png(
-                path.join(target_dir, "materials", "textures", texture_file))
+        with open(path.join(target_dir, "materials", "scripts", material_file), "w") as file:
+            file.write(ground_plane_material("Tile/" + hash, texture_file))
 
-            with open(path.join(target_dir, "materials", "scripts", material_file), "w") as file:
-                file.write(ground_plane_material("Tile/" + hash, texture_file))
+        models += ground_plane_model(
+            bounding_box.x_min + (x + 0.5) * TILE_SIZE / PIXEL_PER_UNIT,
+            bounding_box.y_min + (y + 0.5) * TILE_SIZE / PIXEL_PER_UNIT,
+            TILE_SIZE / PIXEL_PER_UNIT,
+            "Tile/" + hash)
 
-            models += ground_plane_model(
-                bounding_box.x_min + (x + 0.5) * TILE_SIZE / PIXEL_PER_UNIT,
-                bounding_box.y_min + (y + 0.5) * TILE_SIZE / PIXEL_PER_UNIT,
-                TILE_SIZE / PIXEL_PER_UNIT,
-                "Tile/" + hash)
-
-    sys.stdout.write("\n")
     return models
 
 def ground_plane_material(name, file):
