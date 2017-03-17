@@ -33,14 +33,10 @@ def generate_road(primitives_const, padding, curv_a):
             math.cos(angle) * padding,
             math.sin(angle) * padding
         ])
-        #print(target_point)
         target_angle = norm_angle(angle + math.pi)
-        #print(target_angle)
         (begin_point, begin_angle, begin_curv) = current_primitive.get_beginning()
-        #print(begin_angle)
         new_primitives.append(primitive.TransrotPrimitive(current_primitive,
             target_point - begin_point, target_angle - begin_angle))
-        #print(new_primitives)
 
     return new_primitives
 
@@ -113,14 +109,11 @@ def generate(preset):
 
     road = None
     while True:
-        sys.stdout.write(".")
-        sys.stdout.flush()
         random.shuffle(primitives)
         curv_a = random_float_array(len(primitives), 10, 10)
         road = generate_road(primitives, 0, curv_a)
         if not check_intersections(road, preset.road_width):
             break
-    print()
 
     render_road(road)
     return road

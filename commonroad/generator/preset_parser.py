@@ -9,9 +9,8 @@ class Preset:
         self.default_paddding = 2
         self.primitives = []
 
-def parse(path):
-    with open(path, "r") as file:
-        data = yaml.load(file, Loader=yaml.RoundTripLoader)
+def parse(data):
+    data = yaml.load(data, Loader=yaml.RoundTripLoader)
     preset = Preset()
     preset.road_width = data["road_width"]
     for p in data["primitives"]:

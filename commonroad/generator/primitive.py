@@ -282,7 +282,8 @@ class Clothoid(Primitive):
             end_points.append(p)
         self._points = begin_points + end_points
         if len(self._points) < 2:
-            print(curvature_begin, curvature_end, a)
+            #print(curvature_begin, curvature_end, a)
+            pass
 
     def get_points(self):
         return self._points
