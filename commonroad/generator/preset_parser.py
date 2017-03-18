@@ -46,6 +46,11 @@ def parse(data):
             preset.primitives.append(primitive.StraightLineObstacle(
                 data["length"], data["obstacle_size"], data["lane"]
             ))
+        elif "blocked_area" in p:
+            data = p["blocked_area"]
+            preset.primitives.append(primitive.BlockedAreaObstacle(
+                data["length"], data["obstacle_width"]
+            ))
         else:
             raise ValueError("Unknown primitive type")
     return preset

@@ -352,3 +352,20 @@ class StraightLineObstacle(StraightLine):
         objects = super().export(config)
         objects.append(obstacle)
         return objects
+
+class BlockedAreaObstacle(StraightLine):
+    def __init__(self, length, obst_width):
+        super().__init__(length)
+        self._obst_width = obst_width
+
+    def export(self, config):
+        rect = schema.rectangle(length=self._length, width=self._obst_width,
+            orientation=0, centerPoint=schema.point(x=self._length/2,
+            y=-config.road_width+self._obst_width/2))
+        obstacle = schema.obstacle(role="static", type="blockedArea",
+            shape=schema.shape())
+        obstacle.shape.rectangle.append(rect)
+
+        objects = super().export(config)
+        objects.append(obstacle)
+        return objects
