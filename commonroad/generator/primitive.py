@@ -346,7 +346,7 @@ class StraightLineObstacle(StraightLine):
         rect = schema.rectangle(length=self._obst_size,
             width=self._obst_size, orientation=0,
             centerPoint=schema.point(x=self._length / 2, y=y))
-        obstacle = schema.obstacle(role="static", type="car", shape=schema.shape())
+        obstacle = schema.obstacle(role="static", type="parkedVehicle", shape=schema.shape())
         obstacle.shape.rectangle.append(rect)
 
         objects = super().export(config)

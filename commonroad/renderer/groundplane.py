@@ -6,6 +6,7 @@ from os import path
 import os
 import hashlib
 from tqdm import tqdm
+import numpy as np
 
 PIXEL_PER_UNIT = 500
 TILE_SIZE = 2048
@@ -65,8 +66,34 @@ def draw_shape(ctx, shape):
     for poly in shape.polygon:
         draw_polygon(ctx, poly)
 
+def draw_stripes_rect(ctx, rectangle):
+    ctx.save()
+    ctx.translate(rectangle.centerPoint.x, rectangle.centerPoint.y)
+    ctx.rotate(-rectangle.orientation)
+
+    ctx.rectangle(- rectangle.length / 2, - rectangle.width / 2,
+        rectangle.length, rectangle.width)
+    ctx.clip_preserve()
+    ctx.stroke()
+
+    start_x = - rectangle.length / 2 - rectangle.width
+    end_x = rectangle.length / 2
+    y_bottom = - rectangle.width / 2
+    y_top = rectangle.width / 2
+    ctx.set_line_width (0.02)
+    for x in np.arange(start_x, end_x, 0.08):
+        ctx.move_to(x, y_bottom)
+        ctx.line_to(x + rectangle.width, y_top)
+    ctx.stroke()
+
+    ctx.restore()
+
 def draw_obstacle(ctx, obstacle):
-    draw_shape(ctx, obstacle.shape)
+    if obstacle.type == "blockedArea":
+        for rect in obstacle.shape.rectangle:
+            draw_stripes_rect(ctx, rect)
+    else:
+        draw_shape(ctx, obstacle.shape)
 
 def draw(doc, target_dir):
     bounding_box = utils.get_bounding_box(doc)

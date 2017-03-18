@@ -7,7 +7,8 @@ def generate_sdf(xml_content, target_dir):
 
     content = groundplane.draw(doc, target_dir)
     for obst in doc.obstacle:
-        content += obstacle.draw(obst)
+        if obst.type != "blockedArea":
+            content += obstacle.draw(obst)
 
     with open(path.join(target_dir, "world.sdf"), "w") as file:
         file.write("<sdf version='1.6'><world name='default'>")
