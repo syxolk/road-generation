@@ -42,7 +42,8 @@ def draw_rectangle(ctx, rectangle):
     ctx.save()
     ctx.translate(rectangle.centerPoint.x, rectangle.centerPoint.y)
     ctx.rotate(-rectangle.orientation)
-    ctx.rectangle(- rectangle.width / 2, - rectangle.length / 2, rectangle.width, rectangle.length)
+    ctx.rectangle(- rectangle.length / 2, - rectangle.width / 2,
+        rectangle.length, rectangle.width)
     ctx.fill()
     ctx.restore()
 
