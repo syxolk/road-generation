@@ -157,6 +157,12 @@ class TransrotPrimitive(Primitive):
                     transformed = self._transform_point([x, y])
                     rect.orientation -= self._angle
                     rect.centerPoint = schema.point(x=transformed[0], y=transformed[1])
+            elif isinstance(obj, schema.trafficSign):
+                x = obj.centerPoint.x
+                y = obj.centerPoint.y
+                transformed = self._transform_point([x, y])
+                obj.orientation -= self._angle
+                obj.centerPoint = schema.point(x=transformed[0], y=transformed[1])
 
         return objects
 
@@ -368,4 +374,18 @@ class BlockedAreaObstacle(StraightLine):
 
         objects = super().export(config)
         objects.append(obstacle)
+        return objects
+
+class TrafficSign(StraightLine):
+    def __init__(self, length, traffic_sign):
+        super().__init__(length)
+        self._traffic_sign = traffic_sign
+
+    def export(self, config):
+        traffic_sign = schema.trafficSign(type=self._traffic_sign,
+            orientation=math.pi, centerPoint=schema.point(x=self._length / 2,
+            y=-config.road_width))
+
+        objects = super().export(config)
+        objects.append(traffic_sign)
         return objects

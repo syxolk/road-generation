@@ -51,6 +51,11 @@ def parse(data):
             preset.primitives.append(primitive.BlockedAreaObstacle(
                 data["length"], data["obstacle_width"]
             ))
+        elif "traffic_sign" in p:
+            data = p["traffic_sign"]
+            preset.primitives.append(primitive.TrafficSign(
+                data["length"], data["type"]
+            ))
         else:
             raise ValueError("Unknown primitive type")
     return preset
