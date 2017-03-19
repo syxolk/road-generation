@@ -161,7 +161,7 @@ class TransrotPrimitive(Primitive):
                 x = obj.centerPoint.x
                 y = obj.centerPoint.y
                 transformed = self._transform_point([x, y])
-                obj.orientation -= self._angle
+                obj.orientation += self._angle
                 obj.centerPoint = schema.point(x=transformed[0], y=transformed[1])
 
         return objects
@@ -384,7 +384,7 @@ class TrafficSign(StraightLine):
     def export(self, config):
         traffic_sign = schema.trafficSign(type=self._traffic_sign,
             orientation=math.pi, centerPoint=schema.point(x=self._length / 2,
-            y=-config.road_width))
+            y=-config.road_width - 0.1))
 
         objects = super().export(config)
         objects.append(traffic_sign)
