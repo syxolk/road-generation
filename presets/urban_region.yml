@@ -1,0 +1,11 @@
+road_width: 0.4
+primitives:
+  - straight_line: {length: 2}
+  - straight_line: {length: 1}
+  - right_arc: {radius: 1.2, angle: 90}
+  - left_arc: {radius: 1.2, angle: 45}
+  - traffic_sign: {length: 0.5, type: "stvo-205"}
+  - traffic_sign: {length: 0.5, type: "stvo-206"}
+  - obstacle: {length: 0.4, obstacle_size: 0.4, lane: "own"}
+  - obstacle: {length: 0.2, obstacle_size: 0.2, lane: "other"}
+  - blocked_area: {length: 1, obstacle_width: 0.2}
