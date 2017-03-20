@@ -4,7 +4,7 @@ def draw(obst):
     for rect in obst.shape.rectangle:
         result += obstacle_model("Obstacle/{0}/{1}".format(obst.id, i),
             rect.centerPoint.x, rect.centerPoint.y, rect.length,
-            rect.width, 0.4, - rect.orientation)
+            rect.width, 0.2, - rect.orientation)
         i += 1
     return result
 
