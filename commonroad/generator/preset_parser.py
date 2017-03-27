@@ -33,14 +33,10 @@ def parse(data):
             data = p["clothoid"]
             preset.primitives.append(primitive.Clothoid(
                 data["curv1"], data["curv2"], data["a"]))
-        elif "left_turn_crossing" in p:
-            data = p["left_turn_crossing"]
-            preset.primitives.append(primitive.LeftTurnCrossing(
-                data["size"]))
-        elif "right_turn_crossing" in p:
-            data = p["right_turn_crossing"]
-            preset.primitives.append(primitive.RightTurnCrossing(
-                data["size"]))
+        elif "intersection" in p:
+            data = p["intersection"]
+            preset.primitives.append(primitive.Intersection(
+                data["size"], data["target_dir"], data["lane"]))
         elif "obstacle" in p:
             data = p["obstacle"]
             preset.primitives.append(primitive.StraightLineObstacle(

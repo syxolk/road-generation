@@ -302,14 +302,17 @@ class Clothoid(Primitive):
         dir = np.array(self._points[-1]) - np.array(self._points[-2])
         return (np.array(self._points[-1]), math.atan2(dir[1], dir[0]), self._curv_end)
 
-class LeftTurnCrossing(Primitive):
-    def __init__(self, size):
+class Intersection(Primitive):
+    def __init__(self, size, target_dir, lane):
         self._size = size
-        self._points = [
-            [0, -size],
-            [0, 0],
-            [-size, 0]
-        ]
+        self._target_dir = target_dir
+        self._lane = lane
+        if target_dir == "left":
+            self._points = [[0, -size], [0, 0], [-size, 0]]
+        elif target_dir == "right":
+            self._points = [[0, -size], [0, 0], [size, 0]]
+        elif target_dir == "straight":
+            self._points = [[0, -size], [0, 0], [0, size]]
 
     def get_points(self):
         return self._points
@@ -318,25 +321,76 @@ class LeftTurnCrossing(Primitive):
         return (np.array([0, -self._size]), 1.5 * math.pi, 0)
 
     def get_ending(self):
-        return (np.array([-self._size, 0]), math.pi, 0)
+        if self._target_dir == "left":
+            return (np.array([-self._size, 0]), math.pi, 0)
+        elif self._target_dir == "right":
+            return (np.array([self._size, 0]), math.pi, 0)
+        elif self._target_dir == "straight":
+            return (np.array([0, self._size]), 0.5 * math.pi, 0)
 
-class RightTurnCrossing(Primitive):
-    def __init__(self, size):
-        self._size = size
-        self._points = [
-            [0, -size],
-            [0, 0],
-            [size, 0]
-        ]
+    def export(self, config):
+        southRight = schema.lanelet(leftBoundary=schema.boundary(), rightBoundary=schema.boundary())
+        southRight.leftBoundary.lineMarking = "dashed"
+        southRight.rightBoundary.lineMarking = "solid"
+        southRight.leftBoundary.point.append(schema.point(x=0, y=-self._size))
+        southRight.leftBoundary.point.append(schema.point(x=0, y=-config.road_width))
+        southRight.rightBoundary.point.append(schema.point(x=config.road_width, y=-self._size))
+        southRight.rightBoundary.point.append(schema.point(x=config.road_width, y=-config.road_width))
 
-    def get_points(self):
-        return self._points
+        southLeft = schema.lanelet(leftBoundary=schema.boundary(), rightBoundary=schema.boundary())
+        southLeft.rightBoundary.lineMarking = "solid"
+        southLeft.leftBoundary.point.append(schema.point(x=0, y=-config.road_width))
+        southLeft.leftBoundary.point.append(schema.point(x=0, y=-self._size))
+        southLeft.rightBoundary.point.append(schema.point(x=-config.road_width, y=-config.road_width))
+        southLeft.rightBoundary.point.append(schema.point(x=-config.road_width, y=-self._size))
 
-    def get_beginning(self):
-        return (np.array([0, -self._size]), 1.5 * math.pi, 0)
+        northRight = schema.lanelet(leftBoundary=schema.boundary(), rightBoundary=schema.boundary())
+        northRight.leftBoundary.lineMarking = "dashed"
+        northRight.rightBoundary.lineMarking = "solid"
+        northRight.leftBoundary.point.append(schema.point(x=0, y=self._size))
+        northRight.leftBoundary.point.append(schema.point(x=0, y=config.road_width))
+        northRight.rightBoundary.point.append(schema.point(x=-config.road_width, y=self._size))
+        northRight.rightBoundary.point.append(schema.point(x=-config.road_width, y=config.road_width))
 
-    def get_ending(self):
-        return (np.array([self._size, 0]), 0, 0)
+        northLeft = schema.lanelet(leftBoundary=schema.boundary(), rightBoundary=schema.boundary())
+        northLeft.rightBoundary.lineMarking = "solid"
+        northLeft.leftBoundary.point.append(schema.point(x=0, y=config.road_width))
+        northLeft.leftBoundary.point.append(schema.point(x=0, y=self._size))
+        northLeft.rightBoundary.point.append(schema.point(x=config.road_width, y=config.road_width))
+        northLeft.rightBoundary.point.append(schema.point(x=config.road_width, y=self._size))
+
+        eastRight = schema.lanelet(leftBoundary=schema.boundary(), rightBoundary=schema.boundary())
+        eastRight.leftBoundary.lineMarking = "dashed"
+        eastRight.rightBoundary.lineMarking = "solid"
+        eastRight.leftBoundary.point.append(schema.point(x=self._size, y=0))
+        eastRight.leftBoundary.point.append(schema.point(x=config.road_width, y=0))
+        eastRight.rightBoundary.point.append(schema.point(x=self._size, y=config.road_width))
+        eastRight.rightBoundary.point.append(schema.point(x=config.road_width, y=config.road_width))
+
+        eastLeft = schema.lanelet(leftBoundary=schema.boundary(), rightBoundary=schema.boundary())
+        eastLeft.rightBoundary.lineMarking = "solid"
+        eastLeft.leftBoundary.point.append(schema.point(x=config.road_width, y=0))
+        eastLeft.leftBoundary.point.append(schema.point(x=self._size, y=0))
+        eastLeft.rightBoundary.point.append(schema.point(x=config.road_width, y=-config.road_width))
+        eastLeft.rightBoundary.point.append(schema.point(x=self._size, y=-config.road_width))
+
+        westRight = schema.lanelet(leftBoundary=schema.boundary(), rightBoundary=schema.boundary())
+        westRight.leftBoundary.lineMarking = "dashed"
+        westRight.rightBoundary.lineMarking = "solid"
+        westRight.leftBoundary.point.append(schema.point(x=-self._size, y=0))
+        westRight.leftBoundary.point.append(schema.point(x=-config.road_width, y=0))
+        westRight.rightBoundary.point.append(schema.point(x=-self._size, y=-config.road_width))
+        westRight.rightBoundary.point.append(schema.point(x=-config.road_width, y=-config.road_width))
+
+        westLeft = schema.lanelet(leftBoundary=schema.boundary(), rightBoundary=schema.boundary())
+        westLeft.rightBoundary.lineMarking = "solid"
+        westLeft.leftBoundary.point.append(schema.point(x=-config.road_width, y=0))
+        westLeft.leftBoundary.point.append(schema.point(x=-self._size, y=0))
+        westLeft.rightBoundary.point.append(schema.point(x=-config.road_width, y=config.road_width))
+        westLeft.rightBoundary.point.append(schema.point(x=-self._size, y=config.road_width))
+
+        return [southRight, southLeft, northLeft, northRight,
+            eastLeft, eastRight, westLeft, westRight]
 
 class StraightLineObstacle(StraightLine):
     def __init__(self, length, obst_size, lane):
