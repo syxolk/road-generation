@@ -324,7 +324,7 @@ class Intersection(Primitive):
         if self._target_dir == "left":
             return (np.array([-self._size, 0]), math.pi, 0)
         elif self._target_dir == "right":
-            return (np.array([self._size, 0]), math.pi, 0)
+            return (np.array([self._size, 0]), 0, 0)
         elif self._target_dir == "straight":
             return (np.array([0, self._size]), 0.5 * math.pi, 0)
 
