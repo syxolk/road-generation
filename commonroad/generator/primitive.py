@@ -27,6 +27,12 @@ def is_left(a, b, c):
     y = c - a
     return np.cross(x, y) > 0
 
+def convert_line_marking(marking):
+    if marking is None or marking == "missing":
+        return None
+    else:
+        return marking
+
 class Primitive:
     def get_points(self):
         return []
@@ -66,9 +72,9 @@ class Primitive:
         lanelet1 = schema.lanelet(leftBoundary=schema.boundary(), rightBoundary=schema.boundary())
         lanelet2 = schema.lanelet(leftBoundary=schema.boundary(), rightBoundary=schema.boundary())
 
-        lanelet1.rightBoundary.lineMarking = "solid"
-        lanelet1.leftBoundary.lineMarking = "dashed"
-        lanelet2.rightBoundary.lineMarking = "solid"
+        lanelet1.rightBoundary.lineMarking = convert_line_marking(self._right_line if hasattr(self, "_right_line") else None)
+        lanelet1.leftBoundary.lineMarking = convert_line_marking(self._middle_line if hasattr(self, "_middle_line") else None)
+        lanelet2.rightBoundary.lineMarking = convert_line_marking(self._left_line if hasattr(self, "_left_line") else None)
 
         for i in range(len(points)):
             if i != len(points) - 1:
@@ -167,8 +173,11 @@ class TransrotPrimitive(Primitive):
         return objects
 
 class StraightLine(Primitive):
-    def __init__(self, length):
-        self._length = length
+    def __init__(self, args):
+        self._length = float(args["length"])
+        self._left_line = args.get("leftLine", "solid")
+        self._middle_line = args.get("middleLine", "dashed")
+        self._right_line = args.get("rightLine", "solid")
 
     def __repr__(self):
         return "StraightLine(length={})".format(self._length)
@@ -183,9 +192,12 @@ class StraightLine(Primitive):
         return (np.array([self._length, 0]), 0, 0)
 
 class LeftCircularArc(Primitive):
-    def __init__(self, radius, angle):
-        self._radius = radius
-        self._angle = angle
+    def __init__(self, args):
+        self._radius = float(args["radius"])
+        self._angle = math.radians(float(args["angle"]))
+        self._left_line = args.get("leftLine", "solid")
+        self._middle_line = args.get("middleLine", "dashed")
+        self._right_line = args.get("rightLine", "solid")
 
     def __repr__(self):
         return "LeftCircularArc(radius={}, angle={})".format(self._radius, self._angle)
@@ -211,9 +223,12 @@ class LeftCircularArc(Primitive):
         ]), self._angle, - 1 / self._radius)
 
 class RightCircularArc(Primitive):
-    def __init__(self, radius, angle):
-        self._radius = radius
-        self._angle = angle
+    def __init__(self, args):
+        self._radius = float(args["radius"])
+        self._angle = math.radians(float(args["angle"]))
+        self._left_line = args.get("leftLine", "solid")
+        self._middle_line = args.get("middleLine", "dashed")
+        self._right_line = args.get("rightLine", "solid")
 
     def __repr__(self):
         return "RightCircularArc(radius={}, angle={})".format(self._radius, self._angle)
@@ -238,12 +253,36 @@ class RightCircularArc(Primitive):
             - self._radius + math.sin(math.pi/2 - self._angle) * self._radius
         ]), - self._angle, 1 / self._radius)
 
-class CubicBezier(Primitive):
-    def __init__(self, p1, p2, p3):
+class QuadBezier(Primitive):
+    def __init__(self, args):
         self._p0 = np.array([0, 0])
-        self._p1 = np.array(p1)
-        self._p2 = np.array(p2)
-        self._p3 = np.array(p3)
+        self._p1 = np.array([float(args["p1x"]), float(args["p1y"])])
+        self._p2 = np.array([float(args["p2x"]), float(args["p2y"])])
+        self._left_line = args.get("leftLine", "solid")
+        self._middle_line = args.get("middleLine", "dashed")
+        self._right_line = args.get("rightLine", "solid")
+
+        self._points = []
+        t = 0
+        while t <= 1:
+            c0 = (1-t) * self._p0 + t * self._p1
+            c1 = (1-t) * self._p1 + t * self._p2
+            x = (1-t) * c0 + t * c1
+            self._points.append(x)
+            t += 0.01
+
+    def get_points(self):
+        return self._points
+
+class CubicBezier(Primitive):
+    def __init__(self, args):
+        self._p0 = np.array([0, 0])
+        self._p1 = np.array([float(args["p1x"]), float(args["p1y"])])
+        self._p2 = np.array([float(args["p2x"]), float(args["p2y"])])
+        self._p3 = np.array([float(args["p3x"]), float(args["p3y"])])
+        self._left_line = args.get("leftLine", "solid")
+        self._middle_line = args.get("middleLine", "dashed")
+        self._right_line = args.get("rightLine", "solid")
 
         self._points = []
         t = 0
@@ -303,10 +342,10 @@ class Clothoid(Primitive):
         return (np.array(self._points[-1]), math.atan2(dir[1], dir[0]), self._curv_end)
 
 class Intersection(Primitive):
-    def __init__(self, size, target_dir, lane):
-        self._size = size
-        self._target_dir = target_dir
-        self._lane = lane
+    def __init__(self, args):
+        self._size = 0.9 # TODO
+        self._target_dir = args["turn"]
+        self._rule = args["rule"]
         if target_dir == "left":
             self._points = [[0, -size], [0, 0], [-size, 0]]
         elif target_dir == "right":
@@ -393,18 +432,20 @@ class Intersection(Primitive):
             eastLeft, eastRight, westLeft, westRight]
 
 class StraightLineObstacle(StraightLine):
-    def __init__(self, length, obst_size, lane):
-        super().__init__(length)
-        self._obst_size = obst_size
-        self._lane = lane
+    def __init__(self, args):
+        super().__init__(args)
+        self._width = float(args["width"])
+        self._position = float(args["position"])
+        self._anchor = args["anchor"]
 
     def export(self, config):
-        if self._lane == "own":
-            y = - config.road_width/2
-        else:
-            y = config.road_width/2
-        rect = schema.rectangle(length=self._obst_size,
-            width=self._obst_size, orientation=0,
+        y = self._position * config.road_width
+        if self._anchor == "left":
+            y -= self._width / 2
+        elif self._anchor == "right":
+            y += self._width / 2
+        rect = schema.rectangle(length=self._length,
+            width=self._width, orientation=0,
             centerPoint=schema.point(x=self._length / 2, y=y))
         obstacle = schema.obstacle(role="static", type="parkedVehicle", shape=schema.shape())
         obstacle.shape.rectangle.append(rect)
@@ -414,9 +455,9 @@ class StraightLineObstacle(StraightLine):
         return objects
 
 class BlockedAreaObstacle(StraightLine):
-    def __init__(self, length, obst_width):
-        super().__init__(length)
-        self._obst_width = obst_width
+    def __init__(self, args):
+        super().__init__(args)
+        self._obst_width = float(args["width"])
 
     def export(self, config):
         rect = schema.rectangle(length=self._length, width=self._obst_width,
@@ -431,9 +472,9 @@ class BlockedAreaObstacle(StraightLine):
         return objects
 
 class TrafficSign(StraightLine):
-    def __init__(self, length, traffic_sign):
-        super().__init__(length)
-        self._traffic_sign = traffic_sign
+    def __init__(self, args):
+        super().__init__(dict(length=0.01))
+        self._traffic_sign = args["type"]
 
     def export(self, config):
         traffic_sign = schema.trafficSign(type=self._traffic_sign,

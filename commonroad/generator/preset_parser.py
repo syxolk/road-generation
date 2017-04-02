@@ -1,57 +1,72 @@
-import ruamel.yaml as yaml
 from commonroad.generator import primitive
-import math
+import random
 
 class Preset:
     def __init__(self):
         # set sensitve defaults
         self.road_width = 1
-        self.default_paddding = 2
         self.primitives = []
 
-def parse(data):
-    data = yaml.load(data, Loader=yaml.RoundTripLoader)
+def eval(root):
     preset = Preset()
-    preset.road_width = data["road_width"]
-    for p in data["primitives"]:
-        if "straight_line" in p:
-            preset.primitives.append(
-                primitive.StraightLine(p["straight_line"]["length"]))
-        elif "right_arc" in p:
-            preset.primitives.append(primitive.RightCircularArc(
-                p["right_arc"]["radius"],
-                math.radians(p["right_arc"]["angle"])))
-        elif "left_arc" in p:
-            preset.primitives.append(primitive.LeftCircularArc(
-                p["left_arc"]["radius"],
-                math.radians(p["left_arc"]["angle"])))
-        elif "cubic_bezier" in p:
-            data = p["cubic_bezier"]
-            preset.primitives.append(primitive.CubicBezier(
-                data["p1"], data["p2"], data["p3"]))
-        elif "clothoid" in p:
-            data = p["clothoid"]
-            preset.primitives.append(primitive.Clothoid(
-                data["curv1"], data["curv2"], data["a"]))
-        elif "intersection" in p:
-            data = p["intersection"]
-            preset.primitives.append(primitive.Intersection(
-                data["size"], data["target_dir"], data["lane"]))
-        elif "obstacle" in p:
-            data = p["obstacle"]
-            preset.primitives.append(primitive.StraightLineObstacle(
-                data["length"], data["obstacle_size"], data["lane"]
-            ))
-        elif "blocked_area" in p:
-            data = p["blocked_area"]
-            preset.primitives.append(primitive.BlockedAreaObstacle(
-                data["length"], data["obstacle_width"]
-            ))
-        elif "traffic_sign" in p:
-            data = p["traffic_sign"]
-            preset.primitives.append(primitive.TrafficSign(
-                data["length"], data["type"]
-            ))
-        else:
-            raise ValueError("Unknown primitive type")
+    preset.road_width = 0.4 # TODO
+    preset.primitives = eval_element(root.find("sequence"))
     return preset
+
+def eval_element(el):
+    if el.tag == "line":
+        return [
+            primitive.StraightLine(el.attrib)
+        ]
+    elif el.tag == "leftArc":
+        return [
+            primitive.LeftCircularArc(el.attrib)
+        ]
+    elif el.tag == "rightArc":
+        return [
+            primitive.RightCircularArc(el.attrib)
+        ]
+    elif el.tag == "quadBezier":
+        return [
+            primitive.QuadBezier(el.attrib)
+        ]
+    elif el.tag == "cubicBezier":
+        return [
+            primitive.CubicBezier(el.attrib)
+        ]
+    elif el.tag == "blockedArea":
+        return [
+            primitive.BlockedAreaObstacle(el.attrib)
+        ]
+    elif el.tag == "intersection":
+        return [
+            primitive.Intersection(el.attrib)
+        ]
+    elif el.tag == "staticObstacle":
+        return [
+            primitive.StraightLineObstacle(el.attrib)
+        ]
+    elif el.tag == "trafficSign":
+        return [
+            primitive.TrafficSign(el.attrib)
+        ]
+    elif el.tag == "sequence":
+        return [x for child in el for x in eval_element(child)]
+    elif el.tag == "optional":
+        if random.random() < float(el.attrib["p"]):
+            return [x for child in el for x in eval_element(child)]
+        else:
+            return []
+    elif el.tag == "repeat":
+        return [x for _ in range(int(el.attrib["n"])) for child in el for x in eval_element(child)]
+    elif el.tag == "select":
+        total = sum([float(case.attrib["p"]) for case in el])
+        target = random.random() * total
+        current_total = 0
+        for case in el:
+            current_total += float(case.attrib["p"])
+            if target < current_total:
+                return [x for child in case for x in eval_element(child)]
+                break
+    else:
+        return []
