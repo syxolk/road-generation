@@ -27,17 +27,21 @@ def draw_boundary(ctx, boundary):
     ctx.stroke()
 
 def draw_stop_line(ctx, lanelet):
+    ctx.save()
     p1 = lanelet.leftBoundary.point[-1]
     p2 = lanelet.rightBoundary.point[-1]
 
     if lanelet.stopLine:
         if lanelet.stopLine == "dashed":
-            ctx.set_dash([0.1, 0.1])
+            ctx.set_dash([0.08, 0.06])
         else:
             ctx.set_dash([])
+            ctx.set_line_cap(cairo.LINE_CAP_BUTT)
+        ctx.set_line_width(0.04)
         ctx.move_to(p1.x, p1.y)
         ctx.line_to(p2.x, p2.y)
         ctx.stroke()
+    ctx.restore()
 
 def draw_rectangle(ctx, rectangle):
     ctx.save()
