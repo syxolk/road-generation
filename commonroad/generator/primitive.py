@@ -428,8 +428,35 @@ class Intersection(Primitive):
         westLeft.rightBoundary.point.append(schema.point(x=-config.road_width, y=config.road_width))
         westLeft.rightBoundary.point.append(schema.point(x=-self._size, y=config.road_width))
 
-        return [southRight, southLeft, northLeft, northRight,
+        if self._rule == "equal":
+            northRight.stopLine = "dashed"
+            westRight.stopLine = "dashed"
+            eastRight.stopLine = "dashed"
+            southRight.stopLine = "dashed"
+        elif self._rule == "priority-yield":
+            westRight.stopLine = "dashed"
+            eastRight.stopLine = "dashed"
+        elif self._rule == "priority-stop":
+            westRight.stopLine = "solid"
+            eastRight.stopLine = "solid"
+        elif self._rule == "yield":
+            northRight.stopLine = "dashed"
+            southRight.stopLine = "dashed"
+        elif self._rule == "stop":
+            northRight.stopLine = "solid"
+            southRight.stopLine = "solid"
+
+        result = [southRight, southLeft, northLeft, northRight,
             eastLeft, eastRight, westLeft, westRight]
+
+        type_map = {"priority-yield":"stvo-306", "priority-stop":"stvo-306",
+            "yield":"stvo-205", "stop":"stvo-206"}
+        if self._rule in type_map:
+            result.append(schema.trafficSign(type=type_map[self._rule],
+                orientation=math.pi*1.5, centerPoint=schema.point(
+                x=config.road_width + 0.1, y= -config.road_width - 0.5)))
+
+        return result
 
 class StraightLineObstacle(StraightLine):
     def __init__(self, args):

@@ -103,7 +103,8 @@
         <xs:attribute name="rule" use="required">
             <xs:simpleType>
                 <xs:restriction base="xs:string">
-                    <xs:enumeration value="priority" />
+                    <xs:enumeration value="priority-yield" />
+                    <xs:enumeration value="priority-stop" />
                     <xs:enumeration value="yield" />
                     <xs:enumeration value="stop" />
                     <xs:enumeration value="equal" />
