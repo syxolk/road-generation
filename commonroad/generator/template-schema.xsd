@@ -168,6 +168,7 @@
             <xs:element name="blockedArea" type="blockedArea" maxOccurs="unbounded"/>
             <xs:element name="trafficSign" type="trafficSign" maxOccurs="unbounded"/>
             <xs:element name="intersection" type="intersection" maxOccurs="unbounded"/>
+            <xs:element name="staticObstacle" type="staticObstacle" maxOccurs="unbounded"/>
             <xs:element name="sequence" type="sequence" maxOccurs="unbounded"/>
             <xs:element name="optional" type="optional" maxOccurs="unbounded"/>
             <xs:element name="select" type="select" maxOccurs="unbounded"/>
