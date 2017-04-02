@@ -346,12 +346,12 @@ class Intersection(Primitive):
         self._size = 0.9 # TODO
         self._target_dir = args["turn"]
         self._rule = args["rule"]
-        if target_dir == "left":
-            self._points = [[0, -size], [0, 0], [-size, 0]]
-        elif target_dir == "right":
-            self._points = [[0, -size], [0, 0], [size, 0]]
-        elif target_dir == "straight":
-            self._points = [[0, -size], [0, 0], [0, size]]
+        if self._target_dir == "left":
+            self._points = [[0, -self._size], [0, 0], [-self._size, 0]]
+        elif self._target_dir == "right":
+            self._points = [[0, -self._size], [0, 0], [self._size, 0]]
+        elif self._target_dir == "straight":
+            self._points = [[0, -self._size], [0, 0], [0, self._size]]
 
     def get_points(self):
         return self._points
