@@ -99,6 +99,33 @@ def draw_obstacle(ctx, obstacle):
     else:
         draw_shape(ctx, obstacle.shape)
 
+def draw_all_boundaries(lanelet_list, boundary_name):
+    all_ids = [lanelet.id for lanelet in lanelet_list]
+    while len(all_ids) > 0:
+        current_id = all_ids[0]
+        expand_boundary(lanelet_list, get_lanelet_by_id(lanelet_list, current_id), boundary_name, "successor")
+        expand_boundary(lanelet_list, get_lanelet_by_id(lanelet_list, current_id), boundary_name, "predecessor")
+
+def get_lanelet_by_id(lanelet_list, id):
+    for lanelet in lanelet_list:
+        if lanelet.id == id:
+            return lanelet
+    return None
+
+def expand_boundary(lanelet_list, lanelet, boundary_name, direction):
+    ids = []
+    original_line_type = getattr(lanelet, boundary_name).lineMarking
+    while getattr(lanelet, boundary_name).lineMarking == original_line_type:
+        ids.append(lanelet.id)
+        found = False
+        for next in getattr(lanelet, direction).lanelet:
+            next_lanelet = get_lanelet_by_id(lanelet_list, next.ref)
+            if getattr(next_lanelet, boundary_name).lineMarking == original_line_type:
+                lanelet = next_lanelet
+                found = True
+                break
+    return ids[1:]
+
 def draw(doc, target_dir):
     bounding_box = utils.get_bounding_box(doc)
     bounding_box.x_min -= PADDING
@@ -141,6 +168,9 @@ def draw(doc, target_dir):
             draw_boundary(ctx, lanelet.leftBoundary)
             draw_boundary(ctx, lanelet.rightBoundary)
             draw_stop_line(ctx, lanelet)
+
+        draw_all_boundaries(doc.lanelet, "leftBoundary")
+        draw_all_boundaries(doc.lanelet, "rightBoundary")
 
         for obstacle in doc.obstacle:
             draw_obstacle(ctx, obstacle)
