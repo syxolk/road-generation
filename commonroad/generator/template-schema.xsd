@@ -27,9 +27,12 @@
             <xs:enumeration value="stvo-274.1" />
             <xs:enumeration value="stvo-274.2" />
             <xs:enumeration value="stvo-350-10" />
+            <xs:enumeration value="stvo-209-10" />
             <xs:enumeration value="stvo-209-20" />
             <xs:enumeration value="stvo-625-10" />
             <xs:enumeration value="stvo-625-11" />
+            <xs:enumeration value="stvo-625-20" />
+            <xs:enumeration value="stvo-625-21" />
         </xs:restriction>
     </xs:simpleType>
 
