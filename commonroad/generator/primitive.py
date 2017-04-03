@@ -104,6 +104,10 @@ class Primitive:
                 schema.point(x=left[0], y=left[1]))
         # TODO add last point
 
+        # reverse boundary of left lanelet to match driving direction
+        lanelet2.leftBoundary.point.reverse()
+        lanelet2.rightBoundary.point.reverse()
+
         return Export([lanelet1, lanelet2], [(lanelet1, lanelet2)])
 
 class TransrotPrimitive(Primitive):
