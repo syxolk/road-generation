@@ -33,6 +33,11 @@ def convert_line_marking(marking):
     else:
         return marking
 
+class Export:
+    def __init__(self, objects, lanelet_pairs):
+        self.objects = objects
+        self.lanelet_pairs = lanelet_pairs
+
 class Primitive:
     def get_points(self):
         return []
@@ -99,7 +104,7 @@ class Primitive:
                 schema.point(x=left[0], y=left[1]))
         # TODO add last point
 
-        return [lanelet1, lanelet2]
+        return Export([lanelet1, lanelet2], [(lanelet1, lanelet2)])
 
 class TransrotPrimitive(Primitive):
     def __init__(self, child, translation, angle):
@@ -140,7 +145,8 @@ class TransrotPrimitive(Primitive):
         return (self._transform_point(end[0]), end[1] + self._angle, end[2])
 
     def export(self, config):
-        objects = self._child.export(config)
+        export = self._child.export(config)
+        objects = export.objects
 
         for obj in objects:
             if isinstance(obj, schema.lanelet):
@@ -170,7 +176,7 @@ class TransrotPrimitive(Primitive):
                 obj.orientation += self._angle
                 obj.centerPoint = schema.point(x=transformed[0], y=transformed[1])
 
-        return objects
+        return export
 
 class StraightLine(Primitive):
     def __init__(self, args):
@@ -477,9 +483,9 @@ class StraightLineObstacle(StraightLine):
         obstacle = schema.obstacle(role="static", type="parkedVehicle", shape=schema.shape())
         obstacle.shape.rectangle.append(rect)
 
-        objects = super().export(config)
-        objects.append(obstacle)
-        return objects
+        export = super().export(config)
+        export.objects.append(obstacle)
+        return export
 
 class BlockedAreaObstacle(StraightLine):
     def __init__(self, args):
@@ -494,9 +500,9 @@ class BlockedAreaObstacle(StraightLine):
             shape=schema.shape())
         obstacle.shape.rectangle.append(rect)
 
-        objects = super().export(config)
-        objects.append(obstacle)
-        return objects
+        export = super().export(config)
+        export.objects.append(obstacle)
+        return export
 
 class TrafficSign(StraightLine):
     def __init__(self, args):
@@ -508,6 +514,6 @@ class TrafficSign(StraightLine):
             orientation=math.pi, centerPoint=schema.point(x=self._length / 2,
             y=-config.road_width - 0.1))
 
-        objects = super().export(config)
-        objects.append(traffic_sign)
-        return objects
+        export = super().export(config)
+        export.objects.append(traffic_sign)
+        return export
