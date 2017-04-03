@@ -1,7 +1,7 @@
-# ./schema.py
+# ./commonroad/schema.py
 # -*- coding: utf-8 -*-
 # PyXB bindings for NM:e92452c8d3e28a9e27abfc9994d2007779e7f4c9
-# Generated 2017-03-12 19:39:46.437757 by PyXB version 1.2.5 using Python 3.6.0.final.0
+# Generated 2017-04-03 03:55:59.263908 by PyXB version 1.2.5 using Python 3.6.0.final.0
 # Namespace AbsentNamespace0
 
 from __future__ import unicode_literals
@@ -14,7 +14,7 @@ import pyxb.utils.domutils
 import sys
 import pyxb.utils.six as _six
 # Unique identifier for bindings created at the same time
-_GenerationUID = pyxb.utils.utility.UniqueIdentifier('urn:uuid:440fe01a-0753-11e7-8e12-7054d2191245')
+_GenerationUID = pyxb.utils.utility.UniqueIdentifier('urn:uuid:aef42fda-1810-11e7-92e2-7054d2191245')
 
 # Version of PyXB used to generate the bindings
 _PyXBVersion = '1.2.5'
@@ -158,13 +158,29 @@ drivingDir._InitializeFacetMap(drivingDir._CF_enumeration)
 Namespace.addCategoryObject('typeBinding', 'drivingDir', drivingDir)
 _module_typeBindings.drivingDir = drivingDir
 
+# Atomic simple type: laneletType
+class laneletType (pyxb.binding.datatypes.string, pyxb.binding.basis.enumeration_mixin):
+
+    """An atomic simple type."""
+
+    _ExpandedName = pyxb.namespace.ExpandedName(Namespace, 'laneletType')
+    _XSDLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 246, 4)
+    _Documentation = None
+laneletType._CF_enumeration = pyxb.binding.facets.CF_enumeration(value_datatype=laneletType, enum_prefix=None)
+laneletType.road = laneletType._CF_enumeration.addEnumeration(unicode_value='road', tag='road')
+laneletType.sidewalk = laneletType._CF_enumeration.addEnumeration(unicode_value='sidewalk', tag='sidewalk')
+laneletType.zebraCrossing = laneletType._CF_enumeration.addEnumeration(unicode_value='zebraCrossing', tag='zebraCrossing')
+laneletType._InitializeFacetMap(laneletType._CF_enumeration)
+Namespace.addCategoryObject('typeBinding', 'laneletType', laneletType)
+_module_typeBindings.laneletType = laneletType
+
 # Atomic simple type: [anonymous]
 class STD_ANON (pyxb.binding.datatypes.string, pyxb.binding.basis.enumeration_mixin):
 
     """An atomic simple type."""
 
     _ExpandedName = None
-    _XSDLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 293, 16)
+    _XSDLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 302, 16)
     _Documentation = None
 STD_ANON._CF_enumeration = pyxb.binding.facets.CF_enumeration(value_datatype=STD_ANON, enum_prefix=None)
 STD_ANON.stvo_306 = STD_ANON._CF_enumeration.addEnumeration(unicode_value='stvo-306', tag='stvo_306')
@@ -176,9 +192,12 @@ STD_ANON.stvo_280 = STD_ANON._CF_enumeration.addEnumeration(unicode_value='stvo-
 STD_ANON.stvo_274_1 = STD_ANON._CF_enumeration.addEnumeration(unicode_value='stvo-274.1', tag='stvo_274_1')
 STD_ANON.stvo_274_2 = STD_ANON._CF_enumeration.addEnumeration(unicode_value='stvo-274.2', tag='stvo_274_2')
 STD_ANON.stvo_350_10 = STD_ANON._CF_enumeration.addEnumeration(unicode_value='stvo-350-10', tag='stvo_350_10')
+STD_ANON.stvo_209_10 = STD_ANON._CF_enumeration.addEnumeration(unicode_value='stvo-209-10', tag='stvo_209_10')
 STD_ANON.stvo_209_20 = STD_ANON._CF_enumeration.addEnumeration(unicode_value='stvo-209-20', tag='stvo_209_20')
 STD_ANON.stvo_625_10 = STD_ANON._CF_enumeration.addEnumeration(unicode_value='stvo-625-10', tag='stvo_625_10')
 STD_ANON.stvo_625_11 = STD_ANON._CF_enumeration.addEnumeration(unicode_value='stvo-625-11', tag='stvo_625_11')
+STD_ANON.stvo_625_20 = STD_ANON._CF_enumeration.addEnumeration(unicode_value='stvo-625-20', tag='stvo_625_20')
+STD_ANON.stvo_625_21 = STD_ANON._CF_enumeration.addEnumeration(unicode_value='stvo-625-21', tag='stvo_625_21')
 STD_ANON._InitializeFacetMap(STD_ANON._CF_enumeration)
 _module_typeBindings.STD_ANON = STD_ANON
 
@@ -188,7 +207,7 @@ class STD_ANON_ (pyxb.binding.datatypes.string, pyxb.binding.basis.enumeration_m
     """An atomic simple type."""
 
     _ExpandedName = None
-    _XSDLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 330, 12)
+    _XSDLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 358, 12)
     _Documentation = None
 STD_ANON_._CF_enumeration = pyxb.binding.facets.CF_enumeration(value_datatype=STD_ANON_, enum_prefix=None)
 STD_ANON_.n1_0 = STD_ANON_._CF_enumeration.addEnumeration(unicode_value='1.0', tag='n1_0')
@@ -803,55 +822,62 @@ class lanelet (pyxb.binding.basis.complexTypeDefinition):
     _ContentTypeTag = pyxb.binding.basis.complexTypeDefinition._CT_ELEMENT_ONLY
     _Abstract = False
     _ExpandedName = pyxb.namespace.ExpandedName(Namespace, 'lanelet')
-    _XSDLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 246, 4)
+    _XSDLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 254, 4)
     _ElementMap = {}
     _AttributeMap = {}
     # Base type is pyxb.binding.datatypes.anyType
     
+    # Element type uses Python identifier type
+    __type = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'type'), 'type', '__AbsentNamespace0_lanelet_type', False, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 256, 12), )
+
+    
+    type = property(__type.value, __type.set, None, None)
+
+    
     # Element leftBoundary uses Python identifier leftBoundary
-    __leftBoundary = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'leftBoundary'), 'leftBoundary', '__AbsentNamespace0_lanelet_leftBoundary', False, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 248, 12), )
+    __leftBoundary = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'leftBoundary'), 'leftBoundary', '__AbsentNamespace0_lanelet_leftBoundary', False, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 257, 12), )
 
     
     leftBoundary = property(__leftBoundary.value, __leftBoundary.set, None, None)
 
     
     # Element rightBoundary uses Python identifier rightBoundary
-    __rightBoundary = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'rightBoundary'), 'rightBoundary', '__AbsentNamespace0_lanelet_rightBoundary', False, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 249, 12), )
+    __rightBoundary = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'rightBoundary'), 'rightBoundary', '__AbsentNamespace0_lanelet_rightBoundary', False, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 258, 12), )
 
     
     rightBoundary = property(__rightBoundary.value, __rightBoundary.set, None, None)
 
     
     # Element predecessor uses Python identifier predecessor
-    __predecessor = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'predecessor'), 'predecessor', '__AbsentNamespace0_lanelet_predecessor', False, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 250, 12), )
+    __predecessor = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'predecessor'), 'predecessor', '__AbsentNamespace0_lanelet_predecessor', False, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 259, 12), )
 
     
     predecessor = property(__predecessor.value, __predecessor.set, None, None)
 
     
     # Element successor uses Python identifier successor
-    __successor = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'successor'), 'successor', '__AbsentNamespace0_lanelet_successor', False, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 252, 12), )
+    __successor = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'successor'), 'successor', '__AbsentNamespace0_lanelet_successor', False, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 261, 12), )
 
     
     successor = property(__successor.value, __successor.set, None, None)
 
     
     # Element adjacentLeft uses Python identifier adjacentLeft
-    __adjacentLeft = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'adjacentLeft'), 'adjacentLeft', '__AbsentNamespace0_lanelet_adjacentLeft', False, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 254, 12), )
+    __adjacentLeft = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'adjacentLeft'), 'adjacentLeft', '__AbsentNamespace0_lanelet_adjacentLeft', False, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 263, 12), )
 
     
     adjacentLeft = property(__adjacentLeft.value, __adjacentLeft.set, None, None)
 
     
     # Element adjacentRight uses Python identifier adjacentRight
-    __adjacentRight = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'adjacentRight'), 'adjacentRight', '__AbsentNamespace0_lanelet_adjacentRight', False, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 256, 12), )
+    __adjacentRight = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'adjacentRight'), 'adjacentRight', '__AbsentNamespace0_lanelet_adjacentRight', False, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 265, 12), )
 
     
     adjacentRight = property(__adjacentRight.value, __adjacentRight.set, None, None)
 
     
     # Element stopLine uses Python identifier stopLine
-    __stopLine = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'stopLine'), 'stopLine', '__AbsentNamespace0_lanelet_stopLine', False, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 259, 12), )
+    __stopLine = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'stopLine'), 'stopLine', '__AbsentNamespace0_lanelet_stopLine', False, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 268, 12), )
 
     
     stopLine = property(__stopLine.value, __stopLine.set, None, None)
@@ -859,12 +885,13 @@ class lanelet (pyxb.binding.basis.complexTypeDefinition):
     
     # Attribute id uses Python identifier id
     __id = pyxb.binding.content.AttributeUse(pyxb.namespace.ExpandedName(None, 'id'), 'id', '__AbsentNamespace0_lanelet_id', pyxb.binding.datatypes.integer, required=True)
-    __id._DeclarationLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 261, 8)
-    __id._UseLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 261, 8)
+    __id._DeclarationLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 270, 8)
+    __id._UseLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 270, 8)
     
     id = property(__id.value, __id.set, None, None)
 
     _ElementMap.update({
+        __type.name() : __type,
         __leftBoundary.name() : __leftBoundary,
         __rightBoundary.name() : __rightBoundary,
         __predecessor.name() : __predecessor,
@@ -887,34 +914,34 @@ class egoVehicle (pyxb.binding.basis.complexTypeDefinition):
     _ContentTypeTag = pyxb.binding.basis.complexTypeDefinition._CT_ELEMENT_ONLY
     _Abstract = False
     _ExpandedName = pyxb.namespace.ExpandedName(Namespace, 'egoVehicle')
-    _XSDLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 264, 4)
+    _XSDLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 273, 4)
     _ElementMap = {}
     _AttributeMap = {}
     # Base type is pyxb.binding.datatypes.anyType
     
     # Element type uses Python identifier type
-    __type = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'type'), 'type', '__AbsentNamespace0_egoVehicle_type', False, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 266, 12), )
+    __type = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'type'), 'type', '__AbsentNamespace0_egoVehicle_type', False, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 275, 12), )
 
     
     type = property(__type.value, __type.set, None, None)
 
     
     # Element shape uses Python identifier shape
-    __shape = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'shape'), 'shape', '__AbsentNamespace0_egoVehicle_shape', False, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 267, 12), )
+    __shape = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'shape'), 'shape', '__AbsentNamespace0_egoVehicle_shape', False, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 276, 12), )
 
     
     shape = property(__shape.value, __shape.set, None, None)
 
     
     # Element initialState uses Python identifier initialState
-    __initialState = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'initialState'), 'initialState', '__AbsentNamespace0_egoVehicle_initialState', False, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 268, 12), )
+    __initialState = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'initialState'), 'initialState', '__AbsentNamespace0_egoVehicle_initialState', False, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 277, 12), )
 
     
     initialState = property(__initialState.value, __initialState.set, None, None)
 
     
     # Element goalRegion uses Python identifier goalRegion
-    __goalRegion = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'goalRegion'), 'goalRegion', '__AbsentNamespace0_egoVehicle_goalRegion', False, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 269, 12), )
+    __goalRegion = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'goalRegion'), 'goalRegion', '__AbsentNamespace0_egoVehicle_goalRegion', False, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 278, 12), )
 
     
     goalRegion = property(__goalRegion.value, __goalRegion.set, None, None)
@@ -922,8 +949,8 @@ class egoVehicle (pyxb.binding.basis.complexTypeDefinition):
     
     # Attribute id uses Python identifier id
     __id = pyxb.binding.content.AttributeUse(pyxb.namespace.ExpandedName(None, 'id'), 'id', '__AbsentNamespace0_egoVehicle_id', pyxb.binding.datatypes.integer, required=True)
-    __id._DeclarationLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 278, 8)
-    __id._UseLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 278, 8)
+    __id._DeclarationLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 287, 8)
+    __id._UseLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 287, 8)
     
     id = property(__id.value, __id.set, None, None)
 
@@ -947,13 +974,13 @@ class CTD_ANON_4 (pyxb.binding.basis.complexTypeDefinition):
     _ContentTypeTag = pyxb.binding.basis.complexTypeDefinition._CT_ELEMENT_ONLY
     _Abstract = False
     _ExpandedName = None
-    _XSDLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 270, 16)
+    _XSDLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 279, 16)
     _ElementMap = {}
     _AttributeMap = {}
     # Base type is pyxb.binding.datatypes.anyType
     
     # Element state uses Python identifier state
-    __state = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'state'), 'state', '__AbsentNamespace0_CTD_ANON_4_state', True, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 272, 24), )
+    __state = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'state'), 'state', '__AbsentNamespace0_CTD_ANON_4_state', True, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 281, 24), )
 
     
     state = property(__state.value, __state.set, None, None)
@@ -974,13 +1001,13 @@ class parkingLot (pyxb.binding.basis.complexTypeDefinition):
     _ContentTypeTag = pyxb.binding.basis.complexTypeDefinition._CT_ELEMENT_ONLY
     _Abstract = False
     _ExpandedName = pyxb.namespace.ExpandedName(Namespace, 'parkingLot')
-    _XSDLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 282, 4)
+    _XSDLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 291, 4)
     _ElementMap = {}
     _AttributeMap = {}
     # Base type is pyxb.binding.datatypes.anyType
     
     # Element shape uses Python identifier shape
-    __shape = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'shape'), 'shape', '__AbsentNamespace0_parkingLot_shape', False, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 284, 12), )
+    __shape = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'shape'), 'shape', '__AbsentNamespace0_parkingLot_shape', False, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 293, 12), )
 
     
     shape = property(__shape.value, __shape.set, None, None)
@@ -988,8 +1015,8 @@ class parkingLot (pyxb.binding.basis.complexTypeDefinition):
     
     # Attribute id uses Python identifier id
     __id = pyxb.binding.content.AttributeUse(pyxb.namespace.ExpandedName(None, 'id'), 'id', '__AbsentNamespace0_parkingLot_id', pyxb.binding.datatypes.integer, required=True)
-    __id._DeclarationLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 286, 8)
-    __id._UseLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 286, 8)
+    __id._DeclarationLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 295, 8)
+    __id._UseLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 295, 8)
     
     id = property(__id.value, __id.set, None, None)
 
@@ -1010,27 +1037,27 @@ class trafficSign (pyxb.binding.basis.complexTypeDefinition):
     _ContentTypeTag = pyxb.binding.basis.complexTypeDefinition._CT_ELEMENT_ONLY
     _Abstract = False
     _ExpandedName = pyxb.namespace.ExpandedName(Namespace, 'trafficSign')
-    _XSDLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 290, 4)
+    _XSDLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 299, 4)
     _ElementMap = {}
     _AttributeMap = {}
     # Base type is pyxb.binding.datatypes.anyType
     
     # Element type uses Python identifier type
-    __type = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'type'), 'type', '__AbsentNamespace0_trafficSign_type', False, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 292, 12), )
+    __type = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'type'), 'type', '__AbsentNamespace0_trafficSign_type', False, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 301, 12), )
 
     
     type = property(__type.value, __type.set, None, None)
 
     
     # Element orientation uses Python identifier orientation
-    __orientation = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'orientation'), 'orientation', '__AbsentNamespace0_trafficSign_orientation', False, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 310, 12), )
+    __orientation = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'orientation'), 'orientation', '__AbsentNamespace0_trafficSign_orientation', False, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 322, 12), )
 
     
     orientation = property(__orientation.value, __orientation.set, None, None)
 
     
     # Element centerPoint uses Python identifier centerPoint
-    __centerPoint = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'centerPoint'), 'centerPoint', '__AbsentNamespace0_trafficSign_centerPoint', False, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 311, 12), )
+    __centerPoint = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'centerPoint'), 'centerPoint', '__AbsentNamespace0_trafficSign_centerPoint', False, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 323, 12), )
 
     
     centerPoint = property(__centerPoint.value, __centerPoint.set, None, None)
@@ -1038,8 +1065,8 @@ class trafficSign (pyxb.binding.basis.complexTypeDefinition):
     
     # Attribute id uses Python identifier id
     __id = pyxb.binding.content.AttributeUse(pyxb.namespace.ExpandedName(None, 'id'), 'id', '__AbsentNamespace0_trafficSign_id', pyxb.binding.datatypes.integer, required=True)
-    __id._DeclarationLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 313, 8)
-    __id._UseLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 313, 8)
+    __id._DeclarationLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 325, 8)
+    __id._UseLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 325, 8)
     
     id = property(__id.value, __id.set, None, None)
 
@@ -1053,6 +1080,87 @@ class trafficSign (pyxb.binding.basis.complexTypeDefinition):
     })
 _module_typeBindings.trafficSign = trafficSign
 Namespace.addCategoryObject('typeBinding', 'trafficSign', trafficSign)
+
+
+# Complex type intersection with content type ELEMENT_ONLY
+class intersection (pyxb.binding.basis.complexTypeDefinition):
+    """Complex type intersection with content type ELEMENT_ONLY"""
+    _TypeDefinition = None
+    _ContentTypeTag = pyxb.binding.basis.complexTypeDefinition._CT_ELEMENT_ONLY
+    _Abstract = False
+    _ExpandedName = pyxb.namespace.ExpandedName(Namespace, 'intersection')
+    _XSDLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 329, 4)
+    _ElementMap = {}
+    _AttributeMap = {}
+    # Base type is pyxb.binding.datatypes.anyType
+    
+    # Element composition uses Python identifier composition
+    __composition = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'composition'), 'composition', '__AbsentNamespace0_intersection_composition', False, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 331, 12), )
+
+    
+    composition = property(__composition.value, __composition.set, None, None)
+
+    
+    # Element priority uses Python identifier priority
+    __priority = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'priority'), 'priority', '__AbsentNamespace0_intersection_priority', True, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 332, 12), )
+
+    
+    priority = property(__priority.value, __priority.set, None, None)
+
+    
+    # Attribute id uses Python identifier id
+    __id = pyxb.binding.content.AttributeUse(pyxb.namespace.ExpandedName(None, 'id'), 'id', '__AbsentNamespace0_intersection_id', pyxb.binding.datatypes.integer, required=True)
+    __id._DeclarationLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 339, 8)
+    __id._UseLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 339, 8)
+    
+    id = property(__id.value, __id.set, None, None)
+
+    _ElementMap.update({
+        __composition.name() : __composition,
+        __priority.name() : __priority
+    })
+    _AttributeMap.update({
+        __id.name() : __id
+    })
+_module_typeBindings.intersection = intersection
+Namespace.addCategoryObject('typeBinding', 'intersection', intersection)
+
+
+# Complex type [anonymous] with content type EMPTY
+class CTD_ANON_5 (pyxb.binding.basis.complexTypeDefinition):
+    """Complex type [anonymous] with content type EMPTY"""
+    _TypeDefinition = None
+    _ContentTypeTag = pyxb.binding.basis.complexTypeDefinition._CT_EMPTY
+    _Abstract = False
+    _ExpandedName = None
+    _XSDLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 333, 16)
+    _ElementMap = {}
+    _AttributeMap = {}
+    # Base type is pyxb.binding.datatypes.anyType
+    
+    # Attribute low uses Python identifier low
+    __low = pyxb.binding.content.AttributeUse(pyxb.namespace.ExpandedName(None, 'low'), 'low', '__AbsentNamespace0_CTD_ANON_5_low', pyxb.binding.datatypes.integer, required=True)
+    __low._DeclarationLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 334, 20)
+    __low._UseLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 334, 20)
+    
+    low = property(__low.value, __low.set, None, None)
+
+    
+    # Attribute high uses Python identifier high
+    __high = pyxb.binding.content.AttributeUse(pyxb.namespace.ExpandedName(None, 'high'), 'high', '__AbsentNamespace0_CTD_ANON_5_high', pyxb.binding.datatypes.integer, required=True)
+    __high._DeclarationLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 335, 20)
+    __high._UseLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 335, 20)
+    
+    high = property(__high.value, __high.set, None, None)
+
+    _ElementMap.update({
+        
+    })
+    _AttributeMap.update({
+        __low.name() : __low,
+        __high.name() : __high
+    })
+_module_typeBindings.CTD_ANON_5 = CTD_ANON_5
 
 
 # Complex type laneletAdjacentRef with content type EMPTY
@@ -1100,74 +1208,81 @@ class CommonRoad (pyxb.binding.basis.complexTypeDefinition):
     _ContentTypeTag = pyxb.binding.basis.complexTypeDefinition._CT_ELEMENT_ONLY
     _Abstract = False
     _ExpandedName = pyxb.namespace.ExpandedName(Namespace, 'CommonRoad')
-    _XSDLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 316, 4)
+    _XSDLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 342, 4)
     _ElementMap = {}
     _AttributeMap = {}
     # Base type is pyxb.binding.datatypes.anyType
     
     # Element obstacle uses Python identifier obstacle
-    __obstacle = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'obstacle'), 'obstacle', '__AbsentNamespace0_CommonRoad_obstacle', True, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 318, 12), )
+    __obstacle = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'obstacle'), 'obstacle', '__AbsentNamespace0_CommonRoad_obstacle', True, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 344, 12), )
 
     
     obstacle = property(__obstacle.value, __obstacle.set, None, None)
 
     
     # Element lanelet uses Python identifier lanelet
-    __lanelet = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'lanelet'), 'lanelet', '__AbsentNamespace0_CommonRoad_lanelet', True, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 320, 12), )
+    __lanelet = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'lanelet'), 'lanelet', '__AbsentNamespace0_CommonRoad_lanelet', True, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 346, 12), )
 
     
     lanelet = property(__lanelet.value, __lanelet.set, None, None)
 
     
     # Element egoVehicle uses Python identifier egoVehicle
-    __egoVehicle = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'egoVehicle'), 'egoVehicle', '__AbsentNamespace0_CommonRoad_egoVehicle', True, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 322, 12), )
+    __egoVehicle = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'egoVehicle'), 'egoVehicle', '__AbsentNamespace0_CommonRoad_egoVehicle', True, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 348, 12), )
 
     
     egoVehicle = property(__egoVehicle.value, __egoVehicle.set, None, None)
 
     
     # Element parkingLot uses Python identifier parkingLot
-    __parkingLot = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'parkingLot'), 'parkingLot', '__AbsentNamespace0_CommonRoad_parkingLot', True, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 324, 12), )
+    __parkingLot = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'parkingLot'), 'parkingLot', '__AbsentNamespace0_CommonRoad_parkingLot', True, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 350, 12), )
 
     
     parkingLot = property(__parkingLot.value, __parkingLot.set, None, None)
 
     
     # Element trafficSign uses Python identifier trafficSign
-    __trafficSign = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'trafficSign'), 'trafficSign', '__AbsentNamespace0_CommonRoad_trafficSign', True, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 326, 12), )
+    __trafficSign = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'trafficSign'), 'trafficSign', '__AbsentNamespace0_CommonRoad_trafficSign', True, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 352, 12), )
 
     
     trafficSign = property(__trafficSign.value, __trafficSign.set, None, None)
 
     
+    # Element intersection uses Python identifier intersection
+    __intersection = pyxb.binding.content.ElementDeclaration(pyxb.namespace.ExpandedName(None, 'intersection'), 'intersection', '__AbsentNamespace0_CommonRoad_intersection', True, pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 354, 12), )
+
+    
+    intersection = property(__intersection.value, __intersection.set, None, None)
+
+    
     # Attribute commonRoadVersion uses Python identifier commonRoadVersion
     __commonRoadVersion = pyxb.binding.content.AttributeUse(pyxb.namespace.ExpandedName(None, 'commonRoadVersion'), 'commonRoadVersion', '__AbsentNamespace0_CommonRoad_commonRoadVersion', _module_typeBindings.STD_ANON_, required=True)
-    __commonRoadVersion._DeclarationLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 329, 8)
-    __commonRoadVersion._UseLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 329, 8)
+    __commonRoadVersion._DeclarationLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 357, 8)
+    __commonRoadVersion._UseLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 357, 8)
     
     commonRoadVersion = property(__commonRoadVersion.value, __commonRoadVersion.set, None, None)
 
     
     # Attribute benchmarkID uses Python identifier benchmarkID
     __benchmarkID = pyxb.binding.content.AttributeUse(pyxb.namespace.ExpandedName(None, 'benchmarkID'), 'benchmarkID', '__AbsentNamespace0_CommonRoad_benchmarkID', pyxb.binding.datatypes.string)
-    __benchmarkID._DeclarationLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 336, 8)
-    __benchmarkID._UseLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 336, 8)
+    __benchmarkID._DeclarationLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 364, 8)
+    __benchmarkID._UseLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 364, 8)
     
     benchmarkID = property(__benchmarkID.value, __benchmarkID.set, None, None)
 
     
     # Attribute date uses Python identifier date
     __date = pyxb.binding.content.AttributeUse(pyxb.namespace.ExpandedName(None, 'date'), 'date', '__AbsentNamespace0_CommonRoad_date', pyxb.binding.datatypes.date)
-    __date._DeclarationLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 337, 8)
-    __date._UseLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 337, 8)
+    __date._DeclarationLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 365, 8)
+    __date._UseLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 365, 8)
     
     date = property(__date.value, __date.set, None, None)
 
     
     # Attribute timeStepSize uses Python identifier timeStepSize
     __timeStepSize = pyxb.binding.content.AttributeUse(pyxb.namespace.ExpandedName(None, 'timeStepSize'), 'timeStepSize', '__AbsentNamespace0_CommonRoad_timeStepSize', pyxb.binding.datatypes.float)
-    __timeStepSize._DeclarationLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 338, 8)
-    __timeStepSize._UseLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 338, 8)
+    __timeStepSize._DeclarationLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 366, 8)
+    __timeStepSize._UseLocation = pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 366, 8)
     
     timeStepSize = property(__timeStepSize.value, __timeStepSize.set, None, None)
 
@@ -1176,7 +1291,8 @@ class CommonRoad (pyxb.binding.basis.complexTypeDefinition):
         __lanelet.name() : __lanelet,
         __egoVehicle.name() : __egoVehicle,
         __parkingLot.name() : __parkingLot,
-        __trafficSign.name() : __trafficSign
+        __trafficSign.name() : __trafficSign,
+        __intersection.name() : __intersection
     })
     _AttributeMap.update({
         __commonRoadVersion.name() : __commonRoadVersion,
@@ -1188,7 +1304,7 @@ _module_typeBindings.CommonRoad = CommonRoad
 Namespace.addCategoryObject('typeBinding', 'CommonRoad', CommonRoad)
 
 
-commonRoad = pyxb.binding.basis.element(pyxb.namespace.ExpandedName(Namespace, 'commonRoad'), CommonRoad, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 342, 4))
+commonRoad = pyxb.binding.basis.element(pyxb.namespace.ExpandedName(Namespace, 'commonRoad'), CommonRoad, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 370, 4))
 Namespace.addCategoryObject('elementBinding', commonRoad.name().localName(), commonRoad)
 
 
@@ -1787,19 +1903,21 @@ laneletRefList._Automaton = _BuildAutomaton_13()
 
 
 
-lanelet._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'leftBoundary'), boundary, scope=lanelet, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 248, 12)))
+lanelet._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'type'), laneletType, scope=lanelet, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 256, 12), unicode_default='road'))
 
-lanelet._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'rightBoundary'), boundary, scope=lanelet, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 249, 12)))
+lanelet._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'leftBoundary'), boundary, scope=lanelet, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 257, 12)))
 
-lanelet._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'predecessor'), laneletRefList, scope=lanelet, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 250, 12)))
+lanelet._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'rightBoundary'), boundary, scope=lanelet, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 258, 12)))
 
-lanelet._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'successor'), laneletRefList, scope=lanelet, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 252, 12)))
+lanelet._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'predecessor'), laneletRefList, scope=lanelet, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 259, 12)))
 
-lanelet._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'adjacentLeft'), laneletAdjacentRef, scope=lanelet, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 254, 12)))
+lanelet._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'successor'), laneletRefList, scope=lanelet, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 261, 12)))
 
-lanelet._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'adjacentRight'), laneletAdjacentRef, scope=lanelet, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 256, 12)))
+lanelet._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'adjacentLeft'), laneletAdjacentRef, scope=lanelet, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 263, 12)))
 
-lanelet._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'stopLine'), lineMarking, scope=lanelet, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 259, 12)))
+lanelet._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'adjacentRight'), laneletAdjacentRef, scope=lanelet, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 265, 12)))
+
+lanelet._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'stopLine'), lineMarking, scope=lanelet, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 268, 12)))
 
 def _BuildAutomaton_14 ():
     # Remove this helper function from the namespace after it is invoked
@@ -1808,77 +1926,77 @@ def _BuildAutomaton_14 ():
     import pyxb.utils.fac as fac
 
     counters = set()
-    cc_0 = fac.CounterCondition(min=0, max=1, metadata=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 250, 12))
+    cc_0 = fac.CounterCondition(min=0, max=1, metadata=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 256, 12))
     counters.add(cc_0)
-    cc_1 = fac.CounterCondition(min=0, max=1, metadata=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 252, 12))
+    cc_1 = fac.CounterCondition(min=0, max=1, metadata=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 259, 12))
     counters.add(cc_1)
-    cc_2 = fac.CounterCondition(min=0, max=1, metadata=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 254, 12))
+    cc_2 = fac.CounterCondition(min=0, max=1, metadata=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 261, 12))
     counters.add(cc_2)
-    cc_3 = fac.CounterCondition(min=0, max=1, metadata=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 256, 12))
+    cc_3 = fac.CounterCondition(min=0, max=1, metadata=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 263, 12))
     counters.add(cc_3)
-    cc_4 = fac.CounterCondition(min=0, max=1, metadata=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 259, 12))
+    cc_4 = fac.CounterCondition(min=0, max=1, metadata=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 265, 12))
     counters.add(cc_4)
+    cc_5 = fac.CounterCondition(min=0, max=1, metadata=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 268, 12))
+    counters.add(cc_5)
     states = []
     final_update = None
-    symbol = pyxb.binding.content.ElementUse(lanelet._UseForTag(pyxb.namespace.ExpandedName(None, 'leftBoundary')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 248, 12))
+    symbol = pyxb.binding.content.ElementUse(lanelet._UseForTag(pyxb.namespace.ExpandedName(None, 'type')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 256, 12))
     st_0 = fac.State(symbol, is_initial=True, final_update=final_update, is_unordered_catenation=False)
     states.append(st_0)
-    final_update = set()
-    symbol = pyxb.binding.content.ElementUse(lanelet._UseForTag(pyxb.namespace.ExpandedName(None, 'rightBoundary')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 249, 12))
-    st_1 = fac.State(symbol, is_initial=False, final_update=final_update, is_unordered_catenation=False)
+    final_update = None
+    symbol = pyxb.binding.content.ElementUse(lanelet._UseForTag(pyxb.namespace.ExpandedName(None, 'leftBoundary')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 257, 12))
+    st_1 = fac.State(symbol, is_initial=True, final_update=final_update, is_unordered_catenation=False)
     states.append(st_1)
     final_update = set()
-    final_update.add(fac.UpdateInstruction(cc_0, False))
-    symbol = pyxb.binding.content.ElementUse(lanelet._UseForTag(pyxb.namespace.ExpandedName(None, 'predecessor')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 250, 12))
+    symbol = pyxb.binding.content.ElementUse(lanelet._UseForTag(pyxb.namespace.ExpandedName(None, 'rightBoundary')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 258, 12))
     st_2 = fac.State(symbol, is_initial=False, final_update=final_update, is_unordered_catenation=False)
     states.append(st_2)
     final_update = set()
     final_update.add(fac.UpdateInstruction(cc_1, False))
-    symbol = pyxb.binding.content.ElementUse(lanelet._UseForTag(pyxb.namespace.ExpandedName(None, 'successor')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 252, 12))
+    symbol = pyxb.binding.content.ElementUse(lanelet._UseForTag(pyxb.namespace.ExpandedName(None, 'predecessor')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 259, 12))
     st_3 = fac.State(symbol, is_initial=False, final_update=final_update, is_unordered_catenation=False)
     states.append(st_3)
     final_update = set()
     final_update.add(fac.UpdateInstruction(cc_2, False))
-    symbol = pyxb.binding.content.ElementUse(lanelet._UseForTag(pyxb.namespace.ExpandedName(None, 'adjacentLeft')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 254, 12))
+    symbol = pyxb.binding.content.ElementUse(lanelet._UseForTag(pyxb.namespace.ExpandedName(None, 'successor')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 261, 12))
     st_4 = fac.State(symbol, is_initial=False, final_update=final_update, is_unordered_catenation=False)
     states.append(st_4)
     final_update = set()
     final_update.add(fac.UpdateInstruction(cc_3, False))
-    symbol = pyxb.binding.content.ElementUse(lanelet._UseForTag(pyxb.namespace.ExpandedName(None, 'adjacentRight')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 256, 12))
+    symbol = pyxb.binding.content.ElementUse(lanelet._UseForTag(pyxb.namespace.ExpandedName(None, 'adjacentLeft')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 263, 12))
     st_5 = fac.State(symbol, is_initial=False, final_update=final_update, is_unordered_catenation=False)
     states.append(st_5)
     final_update = set()
     final_update.add(fac.UpdateInstruction(cc_4, False))
-    symbol = pyxb.binding.content.ElementUse(lanelet._UseForTag(pyxb.namespace.ExpandedName(None, 'stopLine')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 259, 12))
+    symbol = pyxb.binding.content.ElementUse(lanelet._UseForTag(pyxb.namespace.ExpandedName(None, 'adjacentRight')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 265, 12))
     st_6 = fac.State(symbol, is_initial=False, final_update=final_update, is_unordered_catenation=False)
     states.append(st_6)
+    final_update = set()
+    final_update.add(fac.UpdateInstruction(cc_5, False))
+    symbol = pyxb.binding.content.ElementUse(lanelet._UseForTag(pyxb.namespace.ExpandedName(None, 'stopLine')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 268, 12))
+    st_7 = fac.State(symbol, is_initial=False, final_update=final_update, is_unordered_catenation=False)
+    states.append(st_7)
     transitions = []
+    transitions.append(fac.Transition(st_0, [
+        fac.UpdateInstruction(cc_0, True) ]))
     transitions.append(fac.Transition(st_1, [
-         ]))
+        fac.UpdateInstruction(cc_0, False) ]))
     st_0._set_transitionSet(transitions)
     transitions = []
     transitions.append(fac.Transition(st_2, [
          ]))
-    transitions.append(fac.Transition(st_3, [
-         ]))
-    transitions.append(fac.Transition(st_4, [
-         ]))
-    transitions.append(fac.Transition(st_5, [
-         ]))
-    transitions.append(fac.Transition(st_6, [
-         ]))
     st_1._set_transitionSet(transitions)
     transitions = []
-    transitions.append(fac.Transition(st_2, [
-        fac.UpdateInstruction(cc_0, True) ]))
     transitions.append(fac.Transition(st_3, [
-        fac.UpdateInstruction(cc_0, False) ]))
+         ]))
     transitions.append(fac.Transition(st_4, [
-        fac.UpdateInstruction(cc_0, False) ]))
+         ]))
     transitions.append(fac.Transition(st_5, [
-        fac.UpdateInstruction(cc_0, False) ]))
+         ]))
     transitions.append(fac.Transition(st_6, [
-        fac.UpdateInstruction(cc_0, False) ]))
+         ]))
+    transitions.append(fac.Transition(st_7, [
+         ]))
     st_2._set_transitionSet(transitions)
     transitions = []
     transitions.append(fac.Transition(st_3, [
@@ -1889,6 +2007,8 @@ def _BuildAutomaton_14 ():
         fac.UpdateInstruction(cc_1, False) ]))
     transitions.append(fac.Transition(st_6, [
         fac.UpdateInstruction(cc_1, False) ]))
+    transitions.append(fac.Transition(st_7, [
+        fac.UpdateInstruction(cc_1, False) ]))
     st_3._set_transitionSet(transitions)
     transitions = []
     transitions.append(fac.Transition(st_4, [
@@ -1897,30 +2017,40 @@ def _BuildAutomaton_14 ():
         fac.UpdateInstruction(cc_2, False) ]))
     transitions.append(fac.Transition(st_6, [
         fac.UpdateInstruction(cc_2, False) ]))
+    transitions.append(fac.Transition(st_7, [
+        fac.UpdateInstruction(cc_2, False) ]))
     st_4._set_transitionSet(transitions)
     transitions = []
     transitions.append(fac.Transition(st_5, [
         fac.UpdateInstruction(cc_3, True) ]))
     transitions.append(fac.Transition(st_6, [
         fac.UpdateInstruction(cc_3, False) ]))
+    transitions.append(fac.Transition(st_7, [
+        fac.UpdateInstruction(cc_3, False) ]))
     st_5._set_transitionSet(transitions)
     transitions = []
     transitions.append(fac.Transition(st_6, [
         fac.UpdateInstruction(cc_4, True) ]))
+    transitions.append(fac.Transition(st_7, [
+        fac.UpdateInstruction(cc_4, False) ]))
     st_6._set_transitionSet(transitions)
+    transitions = []
+    transitions.append(fac.Transition(st_7, [
+        fac.UpdateInstruction(cc_5, True) ]))
+    st_7._set_transitionSet(transitions)
     return fac.Automaton(states, counters, False, containing_state=None)
 lanelet._Automaton = _BuildAutomaton_14()
 
 
 
 
-egoVehicle._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'type'), obstacleType, scope=egoVehicle, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 266, 12)))
+egoVehicle._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'type'), obstacleType, scope=egoVehicle, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 275, 12)))
 
-egoVehicle._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'shape'), shape, scope=egoVehicle, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 267, 12)))
+egoVehicle._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'shape'), shape, scope=egoVehicle, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 276, 12)))
 
-egoVehicle._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'initialState'), state, scope=egoVehicle, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 268, 12)))
+egoVehicle._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'initialState'), state, scope=egoVehicle, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 277, 12)))
 
-egoVehicle._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'goalRegion'), CTD_ANON_4, scope=egoVehicle, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 269, 12)))
+egoVehicle._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'goalRegion'), CTD_ANON_4, scope=egoVehicle, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 278, 12)))
 
 def _BuildAutomaton_15 ():
     # Remove this helper function from the namespace after it is invoked
@@ -1931,19 +2061,19 @@ def _BuildAutomaton_15 ():
     counters = set()
     states = []
     final_update = None
-    symbol = pyxb.binding.content.ElementUse(egoVehicle._UseForTag(pyxb.namespace.ExpandedName(None, 'type')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 266, 12))
+    symbol = pyxb.binding.content.ElementUse(egoVehicle._UseForTag(pyxb.namespace.ExpandedName(None, 'type')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 275, 12))
     st_0 = fac.State(symbol, is_initial=True, final_update=final_update, is_unordered_catenation=False)
     states.append(st_0)
     final_update = None
-    symbol = pyxb.binding.content.ElementUse(egoVehicle._UseForTag(pyxb.namespace.ExpandedName(None, 'shape')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 267, 12))
+    symbol = pyxb.binding.content.ElementUse(egoVehicle._UseForTag(pyxb.namespace.ExpandedName(None, 'shape')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 276, 12))
     st_1 = fac.State(symbol, is_initial=False, final_update=final_update, is_unordered_catenation=False)
     states.append(st_1)
     final_update = None
-    symbol = pyxb.binding.content.ElementUse(egoVehicle._UseForTag(pyxb.namespace.ExpandedName(None, 'initialState')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 268, 12))
+    symbol = pyxb.binding.content.ElementUse(egoVehicle._UseForTag(pyxb.namespace.ExpandedName(None, 'initialState')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 277, 12))
     st_2 = fac.State(symbol, is_initial=False, final_update=final_update, is_unordered_catenation=False)
     states.append(st_2)
     final_update = set()
-    symbol = pyxb.binding.content.ElementUse(egoVehicle._UseForTag(pyxb.namespace.ExpandedName(None, 'goalRegion')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 269, 12))
+    symbol = pyxb.binding.content.ElementUse(egoVehicle._UseForTag(pyxb.namespace.ExpandedName(None, 'goalRegion')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 278, 12))
     st_3 = fac.State(symbol, is_initial=False, final_update=final_update, is_unordered_catenation=False)
     states.append(st_3)
     transitions = []
@@ -1966,7 +2096,7 @@ egoVehicle._Automaton = _BuildAutomaton_15()
 
 
 
-CTD_ANON_4._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'state'), state, scope=CTD_ANON_4, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 272, 24)))
+CTD_ANON_4._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'state'), state, scope=CTD_ANON_4, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 281, 24)))
 
 def _BuildAutomaton_16 ():
     # Remove this helper function from the namespace after it is invoked
@@ -1977,7 +2107,7 @@ def _BuildAutomaton_16 ():
     counters = set()
     states = []
     final_update = set()
-    symbol = pyxb.binding.content.ElementUse(CTD_ANON_4._UseForTag(pyxb.namespace.ExpandedName(None, 'state')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 272, 24))
+    symbol = pyxb.binding.content.ElementUse(CTD_ANON_4._UseForTag(pyxb.namespace.ExpandedName(None, 'state')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 281, 24))
     st_0 = fac.State(symbol, is_initial=True, final_update=final_update, is_unordered_catenation=False)
     states.append(st_0)
     transitions = []
@@ -1990,7 +2120,7 @@ CTD_ANON_4._Automaton = _BuildAutomaton_16()
 
 
 
-parkingLot._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'shape'), shape, scope=parkingLot, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 284, 12)))
+parkingLot._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'shape'), shape, scope=parkingLot, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 293, 12)))
 
 def _BuildAutomaton_17 ():
     # Remove this helper function from the namespace after it is invoked
@@ -2001,7 +2131,7 @@ def _BuildAutomaton_17 ():
     counters = set()
     states = []
     final_update = set()
-    symbol = pyxb.binding.content.ElementUse(parkingLot._UseForTag(pyxb.namespace.ExpandedName(None, 'shape')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 284, 12))
+    symbol = pyxb.binding.content.ElementUse(parkingLot._UseForTag(pyxb.namespace.ExpandedName(None, 'shape')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 293, 12))
     st_0 = fac.State(symbol, is_initial=True, final_update=final_update, is_unordered_catenation=False)
     states.append(st_0)
     transitions = []
@@ -2012,11 +2142,11 @@ parkingLot._Automaton = _BuildAutomaton_17()
 
 
 
-trafficSign._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'type'), STD_ANON, scope=trafficSign, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 292, 12)))
+trafficSign._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'type'), STD_ANON, scope=trafficSign, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 301, 12)))
 
-trafficSign._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'orientation'), pyxb.binding.datatypes.float, scope=trafficSign, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 310, 12)))
+trafficSign._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'orientation'), pyxb.binding.datatypes.float, scope=trafficSign, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 322, 12)))
 
-trafficSign._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'centerPoint'), point, scope=trafficSign, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 311, 12)))
+trafficSign._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'centerPoint'), point, scope=trafficSign, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 323, 12)))
 
 def _BuildAutomaton_18 ():
     # Remove this helper function from the namespace after it is invoked
@@ -2027,15 +2157,15 @@ def _BuildAutomaton_18 ():
     counters = set()
     states = []
     final_update = None
-    symbol = pyxb.binding.content.ElementUse(trafficSign._UseForTag(pyxb.namespace.ExpandedName(None, 'type')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 292, 12))
+    symbol = pyxb.binding.content.ElementUse(trafficSign._UseForTag(pyxb.namespace.ExpandedName(None, 'type')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 301, 12))
     st_0 = fac.State(symbol, is_initial=True, final_update=final_update, is_unordered_catenation=False)
     states.append(st_0)
     final_update = None
-    symbol = pyxb.binding.content.ElementUse(trafficSign._UseForTag(pyxb.namespace.ExpandedName(None, 'orientation')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 310, 12))
+    symbol = pyxb.binding.content.ElementUse(trafficSign._UseForTag(pyxb.namespace.ExpandedName(None, 'orientation')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 322, 12))
     st_1 = fac.State(symbol, is_initial=False, final_update=final_update, is_unordered_catenation=False)
     states.append(st_1)
     final_update = set()
-    symbol = pyxb.binding.content.ElementUse(trafficSign._UseForTag(pyxb.namespace.ExpandedName(None, 'centerPoint')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 311, 12))
+    symbol = pyxb.binding.content.ElementUse(trafficSign._UseForTag(pyxb.namespace.ExpandedName(None, 'centerPoint')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 323, 12))
     st_2 = fac.State(symbol, is_initial=False, final_update=final_update, is_unordered_catenation=False)
     states.append(st_2)
     transitions = []
@@ -2054,15 +2184,9 @@ trafficSign._Automaton = _BuildAutomaton_18()
 
 
 
-CommonRoad._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'obstacle'), obstacle, scope=CommonRoad, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 318, 12)))
+intersection._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'composition'), laneletRefList, scope=intersection, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 331, 12)))
 
-CommonRoad._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'lanelet'), lanelet, scope=CommonRoad, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 320, 12)))
-
-CommonRoad._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'egoVehicle'), egoVehicle, scope=CommonRoad, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 322, 12)))
-
-CommonRoad._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'parkingLot'), parkingLot, scope=CommonRoad, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 324, 12)))
-
-CommonRoad._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'trafficSign'), trafficSign, scope=CommonRoad, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 326, 12)))
+intersection._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'priority'), CTD_ANON_5, scope=intersection, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 332, 12)))
 
 def _BuildAutomaton_19 ():
     # Remove this helper function from the namespace after it is invoked
@@ -2072,26 +2196,72 @@ def _BuildAutomaton_19 ():
 
     counters = set()
     states = []
-    final_update = set()
-    symbol = pyxb.binding.content.ElementUse(CommonRoad._UseForTag(pyxb.namespace.ExpandedName(None, 'obstacle')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 318, 12))
+    final_update = None
+    symbol = pyxb.binding.content.ElementUse(intersection._UseForTag(pyxb.namespace.ExpandedName(None, 'composition')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 331, 12))
     st_0 = fac.State(symbol, is_initial=True, final_update=final_update, is_unordered_catenation=False)
     states.append(st_0)
     final_update = set()
-    symbol = pyxb.binding.content.ElementUse(CommonRoad._UseForTag(pyxb.namespace.ExpandedName(None, 'lanelet')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 320, 12))
+    symbol = pyxb.binding.content.ElementUse(intersection._UseForTag(pyxb.namespace.ExpandedName(None, 'priority')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 332, 12))
+    st_1 = fac.State(symbol, is_initial=False, final_update=final_update, is_unordered_catenation=False)
+    states.append(st_1)
+    transitions = []
+    transitions.append(fac.Transition(st_1, [
+         ]))
+    st_0._set_transitionSet(transitions)
+    transitions = []
+    transitions.append(fac.Transition(st_1, [
+         ]))
+    st_1._set_transitionSet(transitions)
+    return fac.Automaton(states, counters, False, containing_state=None)
+intersection._Automaton = _BuildAutomaton_19()
+
+
+
+
+CommonRoad._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'obstacle'), obstacle, scope=CommonRoad, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 344, 12)))
+
+CommonRoad._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'lanelet'), lanelet, scope=CommonRoad, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 346, 12)))
+
+CommonRoad._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'egoVehicle'), egoVehicle, scope=CommonRoad, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 348, 12)))
+
+CommonRoad._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'parkingLot'), parkingLot, scope=CommonRoad, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 350, 12)))
+
+CommonRoad._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'trafficSign'), trafficSign, scope=CommonRoad, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 352, 12)))
+
+CommonRoad._AddElement(pyxb.binding.basis.element(pyxb.namespace.ExpandedName(None, 'intersection'), intersection, scope=CommonRoad, location=pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 354, 12)))
+
+def _BuildAutomaton_20 ():
+    # Remove this helper function from the namespace after it is invoked
+    global _BuildAutomaton_20
+    del _BuildAutomaton_20
+    import pyxb.utils.fac as fac
+
+    counters = set()
+    states = []
+    final_update = set()
+    symbol = pyxb.binding.content.ElementUse(CommonRoad._UseForTag(pyxb.namespace.ExpandedName(None, 'obstacle')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 344, 12))
+    st_0 = fac.State(symbol, is_initial=True, final_update=final_update, is_unordered_catenation=False)
+    states.append(st_0)
+    final_update = set()
+    symbol = pyxb.binding.content.ElementUse(CommonRoad._UseForTag(pyxb.namespace.ExpandedName(None, 'lanelet')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 346, 12))
     st_1 = fac.State(symbol, is_initial=True, final_update=final_update, is_unordered_catenation=False)
     states.append(st_1)
     final_update = set()
-    symbol = pyxb.binding.content.ElementUse(CommonRoad._UseForTag(pyxb.namespace.ExpandedName(None, 'egoVehicle')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 322, 12))
+    symbol = pyxb.binding.content.ElementUse(CommonRoad._UseForTag(pyxb.namespace.ExpandedName(None, 'egoVehicle')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 348, 12))
     st_2 = fac.State(symbol, is_initial=True, final_update=final_update, is_unordered_catenation=False)
     states.append(st_2)
     final_update = set()
-    symbol = pyxb.binding.content.ElementUse(CommonRoad._UseForTag(pyxb.namespace.ExpandedName(None, 'parkingLot')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 324, 12))
+    symbol = pyxb.binding.content.ElementUse(CommonRoad._UseForTag(pyxb.namespace.ExpandedName(None, 'parkingLot')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 350, 12))
     st_3 = fac.State(symbol, is_initial=True, final_update=final_update, is_unordered_catenation=False)
     states.append(st_3)
     final_update = set()
-    symbol = pyxb.binding.content.ElementUse(CommonRoad._UseForTag(pyxb.namespace.ExpandedName(None, 'trafficSign')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 326, 12))
+    symbol = pyxb.binding.content.ElementUse(CommonRoad._UseForTag(pyxb.namespace.ExpandedName(None, 'trafficSign')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 352, 12))
     st_4 = fac.State(symbol, is_initial=True, final_update=final_update, is_unordered_catenation=False)
     states.append(st_4)
+    final_update = set()
+    symbol = pyxb.binding.content.ElementUse(CommonRoad._UseForTag(pyxb.namespace.ExpandedName(None, 'intersection')), pyxb.utils.utility.Location('/home/hans/thesis/extras/schema-extended.xsd', 354, 12))
+    st_5 = fac.State(symbol, is_initial=True, final_update=final_update, is_unordered_catenation=False)
+    states.append(st_5)
     transitions = []
     transitions.append(fac.Transition(st_0, [
          ]))
@@ -2102,6 +2272,8 @@ def _BuildAutomaton_19 ():
     transitions.append(fac.Transition(st_3, [
          ]))
     transitions.append(fac.Transition(st_4, [
+         ]))
+    transitions.append(fac.Transition(st_5, [
          ]))
     st_0._set_transitionSet(transitions)
     transitions = []
@@ -2115,6 +2287,8 @@ def _BuildAutomaton_19 ():
          ]))
     transitions.append(fac.Transition(st_4, [
          ]))
+    transitions.append(fac.Transition(st_5, [
+         ]))
     st_1._set_transitionSet(transitions)
     transitions = []
     transitions.append(fac.Transition(st_0, [
@@ -2126,6 +2300,8 @@ def _BuildAutomaton_19 ():
     transitions.append(fac.Transition(st_3, [
          ]))
     transitions.append(fac.Transition(st_4, [
+         ]))
+    transitions.append(fac.Transition(st_5, [
          ]))
     st_2._set_transitionSet(transitions)
     transitions = []
@@ -2139,6 +2315,8 @@ def _BuildAutomaton_19 ():
          ]))
     transitions.append(fac.Transition(st_4, [
          ]))
+    transitions.append(fac.Transition(st_5, [
+         ]))
     st_3._set_transitionSet(transitions)
     transitions = []
     transitions.append(fac.Transition(st_0, [
@@ -2151,7 +2329,23 @@ def _BuildAutomaton_19 ():
          ]))
     transitions.append(fac.Transition(st_4, [
          ]))
+    transitions.append(fac.Transition(st_5, [
+         ]))
     st_4._set_transitionSet(transitions)
+    transitions = []
+    transitions.append(fac.Transition(st_0, [
+         ]))
+    transitions.append(fac.Transition(st_1, [
+         ]))
+    transitions.append(fac.Transition(st_2, [
+         ]))
+    transitions.append(fac.Transition(st_3, [
+         ]))
+    transitions.append(fac.Transition(st_4, [
+         ]))
+    transitions.append(fac.Transition(st_5, [
+         ]))
+    st_5._set_transitionSet(transitions)
     return fac.Automaton(states, counters, False, containing_state=None)
-CommonRoad._Automaton = _BuildAutomaton_19()
+CommonRoad._Automaton = _BuildAutomaton_20()
 
