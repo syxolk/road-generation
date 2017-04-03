@@ -1,3 +1,0 @@
-road_width: 1
-primitives:
-  - right_arc: {radius: 10, angle: 90}

@@ -1,7 +1,0 @@
-road_width: 1
-primitives:
-  - clothoid: {curv1: 0.2, curv2: 0.2, a: 10}
-  - clothoid: {curv1: -0.1, curv2: 0.1, a: 15}
-  - straight_line: {length: 5}
-  - straight_line: {length: 5}
-  - left_arc: {radius: 5, angle: 45}
