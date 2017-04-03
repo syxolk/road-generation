@@ -75,6 +75,7 @@ def draw_stripes_rect(ctx, rectangle):
     ctx.translate(rectangle.centerPoint.x, rectangle.centerPoint.y)
     ctx.rotate(-rectangle.orientation)
 
+    ctx.set_line_width (0.02)
     ctx.rectangle(- rectangle.length / 2, - rectangle.width / 2,
         rectangle.length, rectangle.width)
     ctx.clip_preserve()
@@ -99,12 +100,38 @@ def draw_obstacle(ctx, obstacle):
     else:
         draw_shape(ctx, obstacle.shape)
 
-def draw_all_boundaries(lanelet_list, boundary_name):
-    all_ids = [lanelet.id for lanelet in lanelet_list]
+def draw_all_boundaries(ctx, lanelet_list, boundary_name):
+    all_ids = [lanelet.id for lanelet in lanelet_list
+        if getattr(lanelet, boundary_name).lineMarking is not None]
     while len(all_ids) > 0:
         current_id = all_ids[0]
-        expand_boundary(lanelet_list, get_lanelet_by_id(lanelet_list, current_id), boundary_name, "successor")
-        expand_boundary(lanelet_list, get_lanelet_by_id(lanelet_list, current_id), boundary_name, "predecessor")
+        suc = expand_boundary(lanelet_list, get_lanelet_by_id(lanelet_list, current_id), boundary_name, "successor")
+        pred = expand_boundary(lanelet_list, get_lanelet_by_id(lanelet_list, current_id), boundary_name, "predecessor")
+        ids_in_run = pred[::-1] + [current_id] + suc
+
+        for id in ids_in_run:
+            all_ids.remove(id)
+
+        lanelets = list(map(lambda x: get_lanelet_by_id(lanelet_list, x), ids_in_run))
+
+        ctx.save()
+        ctx.set_line_width (0.02)
+        line_marking = getattr(lanelets[0], boundary_name).lineMarking
+        if line_marking == "dashed":
+            ctx.set_dash([0.2, 0.2])
+        elif line_marking == "solid" :
+            ctx.set_dash([])
+
+        print("Draw {0} as {1}, {2}".format(ids_in_run, boundary_name, line_marking))
+
+        ctx.move_to(getattr(lanelets[0], boundary_name).point[0].x,
+            getattr(lanelets[0], boundary_name).point[0].y)
+
+        for lanelet in lanelets:
+            for p in getattr(lanelet, boundary_name).point:
+                ctx.line_to(p.x, p.y)
+        ctx.stroke()
+        ctx.restore()
 
 def get_lanelet_by_id(lanelet_list, id):
     for lanelet in lanelet_list:
@@ -115,7 +142,8 @@ def get_lanelet_by_id(lanelet_list, id):
 def expand_boundary(lanelet_list, lanelet, boundary_name, direction):
     ids = []
     original_line_type = getattr(lanelet, boundary_name).lineMarking
-    while getattr(lanelet, boundary_name).lineMarking == original_line_type:
+    found = True
+    while found:
         ids.append(lanelet.id)
         found = False
         for next in getattr(lanelet, direction).lanelet:
@@ -165,12 +193,12 @@ def draw(doc, target_dir):
 
         ctx.set_source_rgb(1, 1, 1)
         for lanelet in doc.lanelet:
-            draw_boundary(ctx, lanelet.leftBoundary)
-            draw_boundary(ctx, lanelet.rightBoundary)
             draw_stop_line(ctx, lanelet)
+            #draw_boundary(ctx, lanelet.leftBoundary)
+            #draw_boundary(ctx, lanelet.rightBoundary)
 
-        draw_all_boundaries(doc.lanelet, "leftBoundary")
-        draw_all_boundaries(doc.lanelet, "rightBoundary")
+        draw_all_boundaries(ctx, doc.lanelet, "leftBoundary")
+        draw_all_boundaries(ctx, doc.lanelet, "rightBoundary")
 
         for obstacle in doc.obstacle:
             draw_obstacle(ctx, obstacle)
