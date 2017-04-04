@@ -122,8 +122,6 @@ def draw_all_boundaries(ctx, lanelet_list, boundary_name):
         elif line_marking == "solid" :
             ctx.set_dash([])
 
-        print("Draw {0} as {1}, {2}".format(ids_in_run, boundary_name, line_marking))
-
         ctx.move_to(getattr(lanelets[0], boundary_name).point[0].x,
             getattr(lanelets[0], boundary_name).point[0].y)
 
