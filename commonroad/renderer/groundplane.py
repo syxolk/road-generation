@@ -236,8 +236,9 @@ def ground_plane_material(name, file):
 
                 texture_unit
                 {{
-                    texture {file}
+                    texture {file} PF_L8
                     filtering anisotropic
+                    max_anisotropy 16
                 }}
             }}
         }}
