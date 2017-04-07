@@ -27,16 +27,13 @@ def material(name, file):
         {{
             pass
             {{
-                ambient 0.5 0.5 0.5 1.0
-                diffuse 1.0 1.0 1.0 1.0
-                specular 0.0 0.0 0.0 1.0 0.5
                 scene_blend alpha_blend
                 depth_write off
 
                 texture_unit
                 {{
                     texture {file}
-                    filtering anisotropic
+                    filtering trilinear
                 }}
             }}
         }}
