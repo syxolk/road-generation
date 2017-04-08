@@ -172,7 +172,7 @@ def draw(doc, target_dir):
     models = ""
 
     for (x, y) in tqdm([(x,y) for x in range(width_num) for y in range(height_num)]):
-        surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, TILE_SIZE, TILE_SIZE)
+        surface = cairo.ImageSurface(cairo.FORMAT_RGB32, TILE_SIZE, TILE_SIZE)
         ctx = cairo.Context(surface)
 
         # fill black
