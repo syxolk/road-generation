@@ -52,7 +52,7 @@ def obstacle_model(name, x, y, length, width, height, orientation):
           </geometry>
           <material>
             <script>
-              <name>Gazebo/Grey</name>
+              <name>Gazebo/White</name>
               <uri>file://media/materials/scripts/gazebo.material</uri>
             </script>
           </material>
