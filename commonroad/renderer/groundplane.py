@@ -76,8 +76,12 @@ def draw_stripes_rect(ctx, rectangle):
     ctx.rotate(-rectangle.orientation)
 
     ctx.set_line_width (0.02)
-    ctx.rectangle(- rectangle.length / 2, - rectangle.width / 2,
-        rectangle.length, rectangle.width)
+    sheering = rectangle.width / 2
+    ctx.move_to(- rectangle.length / 2, - rectangle.width / 2)
+    ctx.line_to(rectangle.length / 2, - rectangle.width / 2)
+    ctx.line_to(rectangle.length / 2 - sheering, rectangle.width / 2)
+    ctx.line_to(- rectangle.length / 2 + sheering, rectangle.width / 2)
+    ctx.close_path()
     ctx.clip_preserve()
     ctx.stroke()
 
@@ -142,15 +146,15 @@ def expand_boundary(lanelet_list, lanelet, boundary_name, direction):
     original_line_type = getattr(lanelet, boundary_name).lineMarking
     found = True
     while found:
-        ids.append(lanelet.id)
         found = False
         for next in getattr(lanelet, direction).lanelet:
             next_lanelet = get_lanelet_by_id(lanelet_list, next.ref)
             if getattr(next_lanelet, boundary_name).lineMarking == original_line_type:
                 lanelet = next_lanelet
+                ids.append(lanelet.id)
                 found = True
                 break
-    return ids[1:]
+    return ids
 
 def draw(doc, target_dir):
     bounding_box = utils.get_bounding_box(doc)
@@ -172,7 +176,7 @@ def draw(doc, target_dir):
     models = ""
 
     for (x, y) in tqdm([(x,y) for x in range(width_num) for y in range(height_num)]):
-        surface = cairo.ImageSurface(cairo.FORMAT_RGB32, TILE_SIZE, TILE_SIZE)
+        surface = cairo.ImageSurface(cairo.FORMAT_RGB24, TILE_SIZE, TILE_SIZE)
         ctx = cairo.Context(surface)
 
         # fill black
@@ -201,9 +205,9 @@ def draw(doc, target_dir):
         for obstacle in doc.obstacle:
             draw_obstacle(ctx, obstacle)
 
-        sha_1 = hashlib.sha1()
-        sha_1.update(surface.get_data())
-        hash = sha_1.hexdigest()
+        sha_256 = hashlib.sha256()
+        sha_256.update(surface.get_data())
+        hash = sha_256.hexdigest()
 
         texture_file = "tile-{0}.png".format(hash)
         material_file = "tile-{0}.material".format(hash)
