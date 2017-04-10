@@ -119,6 +119,7 @@
                 <xs:restriction base="xs:string">
                     <xs:enumeration value="straight" />
                     <xs:enumeration value="left" />
+                    <xs:enumeration value="right" />
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
