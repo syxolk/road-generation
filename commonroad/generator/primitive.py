@@ -409,7 +409,6 @@ class Intersection(Primitive):
         northLeft.rightBoundary.point.append(schema.point(x=config.road_width, y=self._size))
 
         eastRight = schema.lanelet(leftBoundary=schema.boundary(), rightBoundary=schema.boundary())
-        eastRight.leftBoundary.lineMarking = "dashed"
         eastRight.rightBoundary.lineMarking = "solid"
         eastRight.leftBoundary.point.append(schema.point(x=self._size, y=0))
         eastRight.leftBoundary.point.append(schema.point(x=config.road_width, y=0))
@@ -418,13 +417,13 @@ class Intersection(Primitive):
 
         eastLeft = schema.lanelet(leftBoundary=schema.boundary(), rightBoundary=schema.boundary())
         eastLeft.rightBoundary.lineMarking = "solid"
+        eastLeft.leftBoundary.lineMarking = "dashed"
         eastLeft.leftBoundary.point.append(schema.point(x=config.road_width, y=0))
         eastLeft.leftBoundary.point.append(schema.point(x=self._size, y=0))
         eastLeft.rightBoundary.point.append(schema.point(x=config.road_width, y=-config.road_width))
         eastLeft.rightBoundary.point.append(schema.point(x=self._size, y=-config.road_width))
 
         westRight = schema.lanelet(leftBoundary=schema.boundary(), rightBoundary=schema.boundary())
-        westRight.leftBoundary.lineMarking = "dashed"
         westRight.rightBoundary.lineMarking = "solid"
         westRight.leftBoundary.point.append(schema.point(x=-self._size, y=0))
         westRight.leftBoundary.point.append(schema.point(x=-config.road_width, y=0))
@@ -432,6 +431,7 @@ class Intersection(Primitive):
         westRight.rightBoundary.point.append(schema.point(x=-config.road_width, y=-config.road_width))
 
         westLeft = schema.lanelet(leftBoundary=schema.boundary(), rightBoundary=schema.boundary())
+        westLeft.leftBoundary.lineMarking = "dashed"
         westLeft.rightBoundary.lineMarking = "solid"
         westLeft.leftBoundary.point.append(schema.point(x=-config.road_width, y=0))
         westLeft.leftBoundary.point.append(schema.point(x=-self._size, y=0))
@@ -443,10 +443,10 @@ class Intersection(Primitive):
             westRight.stopLine = "dashed"
             eastRight.stopLine = "dashed"
             southRight.stopLine = "dashed"
-        elif self._rule == "priority-yield":
+        elif self._rule == "priority-yield" and self._target_dir == "straight":
             westRight.stopLine = "dashed"
             eastRight.stopLine = "dashed"
-        elif self._rule == "priority-stop":
+        elif self._rule == "priority-stop" and self._target_dir == "straight":
             westRight.stopLine = "solid"
             eastRight.stopLine = "solid"
         elif self._rule == "yield":
@@ -458,6 +458,67 @@ class Intersection(Primitive):
 
         result = [southRight, southLeft, northLeft, northRight,
             eastLeft, eastRight, westLeft, westRight]
+        pairs = [(southRight, southLeft)]
+
+        if self._target_dir == "left":
+            right_lanelet = schema.lanelet(leftBoundary=schema.boundary(), rightBoundary=schema.boundary())
+            right_lanelet.rightBoundary.lineMarking = "dashed"
+            right_lanelet.leftBoundary.lineMarking = "dashed"
+            for angle in np.arange(0, math.pi/2, math.pi/20):
+                right_lanelet.rightBoundary.point.append(schema.point(x=-config.road_width + math.cos(angle) * config.road_width * 2,
+                    y=-config.road_width + math.sin(angle) * config.road_width * 2))
+                right_lanelet.leftBoundary.point.append(schema.point(x=-config.road_width + math.cos(angle) * config.road_width,
+                    y=-config.road_width + math.sin(angle) * config.road_width))
+            left_lanelet = schema.lanelet(leftBoundary=schema.boundary(), rightBoundary=schema.boundary())
+            for angle in np.arange(math.pi/2, 0, -math.pi/20):
+                left_lanelet.leftBoundary.point.append(schema.point(x=-config.road_width + math.cos(angle) * config.road_width,
+                    y=-config.road_width + math.sin(angle) * config.road_width))
+                left_lanelet.rightBoundary.point.append(schema.point(x=-config.road_width,
+                    y=-config.road_width))
+            result.append(right_lanelet)
+            result.append(left_lanelet)
+            pairs.append((right_lanelet, left_lanelet))
+            pairs.append((westLeft, westRight))
+            result.append(schema.trafficSign(type="stvo-209-10",
+                orientation=math.pi*1.5, centerPoint=schema.point(
+                x=config.road_width + 0.1, y= -config.road_width - 0.25)))
+        elif self._target_dir == "right":
+            right_lanelet = schema.lanelet(leftBoundary=schema.boundary(), rightBoundary=schema.boundary())
+            right_lanelet.leftBoundary.lineMarking = "dashed"
+            for angle in np.arange(math.pi, math.pi/2, -math.pi/20):
+                right_lanelet.rightBoundary.point.append(schema.point(x=config.road_width,
+                    y=-config.road_width))
+                right_lanelet.leftBoundary.point.append(schema.point(x=config.road_width + math.cos(angle) * config.road_width,
+                    y=-config.road_width + math.sin(angle) * config.road_width))
+            left_lanelet = schema.lanelet(leftBoundary=schema.boundary(), rightBoundary=schema.boundary())
+            left_lanelet.rightBoundary.lineMarking = "dashed"
+            for angle in np.arange(math.pi/2, math.pi, math.pi/20):
+                left_lanelet.leftBoundary.point.append(schema.point(x=config.road_width + math.cos(angle) * config.road_width,
+                    y=-config.road_width + math.sin(angle) * config.road_width))
+                left_lanelet.rightBoundary.point.append(schema.point(x=config.road_width + math.cos(angle) * config.road_width * 2,
+                    y=-config.road_width + math.sin(angle) * config.road_width * 2))
+            result.append(right_lanelet)
+            result.append(left_lanelet)
+            pairs.append((right_lanelet, left_lanelet))
+            pairs.append((eastLeft, eastRight))
+            result.append(schema.trafficSign(type="stvo-209-20",
+                orientation=math.pi*1.5, centerPoint=schema.point(
+                x=config.road_width + 0.1, y= -config.road_width - 0.25)))
+        elif self._target_dir == "straight":
+            right_lanelet = schema.lanelet(leftBoundary=schema.boundary(), rightBoundary=schema.boundary())
+            right_lanelet.rightBoundary.point.append(schema.point(x=config.road_width, y=-config.road_width))
+            right_lanelet.rightBoundary.point.append(schema.point(x=config.road_width, y=config.road_width))
+            right_lanelet.leftBoundary.point.append(schema.point(x=0, y=-config.road_width))
+            right_lanelet.leftBoundary.point.append(schema.point(x=0, y=config.road_width))
+            left_lanelet = schema.lanelet(leftBoundary=schema.boundary(), rightBoundary=schema.boundary())
+            left_lanelet.rightBoundary.point.append(schema.point(x=-config.road_width, y=config.road_width))
+            left_lanelet.rightBoundary.point.append(schema.point(x=-config.road_width, y=-config.road_width))
+            left_lanelet.leftBoundary.point.append(schema.point(x=0, y=config.road_width))
+            left_lanelet.leftBoundary.point.append(schema.point(x=0, y=-config.road_width))
+            result.append(right_lanelet)
+            result.append(left_lanelet)
+            pairs.append((right_lanelet, left_lanelet))
+            pairs.append((northLeft, northRight))
 
         type_map = {"priority-yield":"stvo-306", "priority-stop":"stvo-306",
             "yield":"stvo-205", "stop":"stvo-206"}
@@ -466,7 +527,7 @@ class Intersection(Primitive):
                 orientation=math.pi*1.5, centerPoint=schema.point(
                 x=config.road_width + 0.1, y= -config.road_width - 0.5)))
 
-        return result
+        return Export(result, pairs)
 
 class StraightLineObstacle(StraightLine):
     def __init__(self, args):
