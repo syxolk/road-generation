@@ -147,13 +147,14 @@ def expand_boundary(lanelet_list, lanelet, boundary_name, direction):
     found = True
     while found:
         found = False
-        for next in getattr(lanelet, direction).lanelet:
-            next_lanelet = get_lanelet_by_id(lanelet_list, next.ref)
-            if getattr(next_lanelet, boundary_name).lineMarking == original_line_type:
-                lanelet = next_lanelet
-                ids.append(lanelet.id)
-                found = True
-                break
+        if getattr(lanelet, direction) is not None:
+            for next in getattr(lanelet, direction).lanelet:
+                next_lanelet = get_lanelet_by_id(lanelet_list, next.ref)
+                if getattr(next_lanelet, boundary_name).lineMarking == original_line_type:
+                    lanelet = next_lanelet
+                    ids.append(lanelet.id)
+                    found = True
+                    break
     return ids
 
 def draw(doc, target_dir):
