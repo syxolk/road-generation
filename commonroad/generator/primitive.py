@@ -569,6 +569,27 @@ class BlockedAreaObstacle(StraightLine):
         export.objects.append(obstacle)
         return export
 
+class ZebraCrossing(StraightLine):
+    def __init__(self, args):
+        super().__init__({
+            "length": args["length"],
+            "leftLine": "solid",
+            "rightLine": "solid",
+            "middleLine": "missing"
+        })
+
+    def export(self, config):
+        zebra = schema.lanelet(leftBoundary=schema.boundary(), rightBoundary=schema.boundary())
+        zebra.type = "zebraCrossing"
+        zebra.leftBoundary.point.append(schema.point(x=0, y=-config.road_width))
+        zebra.leftBoundary.point.append(schema.point(x=0, y=config.road_width))
+        zebra.rightBoundary.point.append(schema.point(x=self._length, y=-config.road_width))
+        zebra.rightBoundary.point.append(schema.point(x=self._length, y=config.road_width))
+
+        export = super().export(config)
+        export.objects.append(zebra)
+        return export
+
 class TrafficSign(StraightLine):
     def __init__(self, args):
         super().__init__(dict(length=0.01))

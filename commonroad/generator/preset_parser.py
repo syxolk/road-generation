@@ -50,6 +50,10 @@ def eval_element(el):
         return [
             primitive.TrafficSign(el.attrib)
         ]
+    elif el.tag == "zebraCrossing":
+        return [
+            primitive.ZebraCrossing(el.attrib)
+        ]
     elif el.tag == "sequence":
         return [x for child in el for x in eval_element(child)]
     elif el.tag == "optional":
