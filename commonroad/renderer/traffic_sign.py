@@ -1,6 +1,16 @@
 import os, shutil, pkg_resources, math
 from os import path
 
+ALL_SIZES = {
+    "stvo-274.1": {"w": 0.15, "h": 0.15}, # zone 30 (begin)
+    "stvo-274.2": {"w": 0.15, "h": 0.15}, # zone 30 (end)
+    "stvo-350-10": {"w": 0.15, "h": 0.15}, # zebra crossing
+    "stvo-625-11": {"w": 0.3, "h": 0.1}, # large curve sign (left)
+    "stvo-625-21": {"w": 0.3, "h": 0.1} # large curve sign (right)
+}
+DEFAULT_SIZE = {"w": 0.1, "h": 0.1}
+HEIGHT = 0.15
+
 def draw(sign, target_dir):
     os.makedirs(path.join(target_dir, "materials", "textures"), exist_ok=True)
     os.makedirs(path.join(target_dir, "materials", "scripts"), exist_ok=True)
@@ -16,8 +26,10 @@ def draw(sign, target_dir):
     with open(path.join(target_dir, "materials", "scripts", material_file), "w") as material_target:
         material_target.write(material("Sign/{0}".format(sign.type), texture_file))
 
-    return model(sign.centerPoint.x, sign.centerPoint.y, 0.20, sign.orientation + math.pi/2,
-        "Sign/{0}".format(sign.id), "Sign/{0}".format(sign.type))
+    size = ALL_SIZES.get(sign.type, DEFAULT_SIZE)
+
+    return model(sign.centerPoint.x, sign.centerPoint.y, HEIGHT + size["h"]/2, sign.orientation + math.pi/2,
+        "Sign/{0}".format(sign.id), "Sign/{0}".format(sign.type), size["w"], size["h"])
 
 def material(name, file):
     return """
@@ -40,7 +52,7 @@ def material(name, file):
     }}
     """.format(name=name, file=file)
 
-def model(x, y, z, orientation, name, material):
+def model(x, y, z, orientation, name, material, width, height):
     return """
     <model name='{name}'>
       <static>1</static>
@@ -68,4 +80,4 @@ def model(x, y, z, orientation, name, material):
       <pose frame=''>{x} {y} {z} {angle} 0 {orientation}</pose>
     </model>
     """.format(x=x, y=y, z=z, orientation=orientation, name=name,
-        material=material, width=0.15, height=0.15, angle=math.pi/2)
+        material=material, width=width, height=height, angle=math.pi/2)
