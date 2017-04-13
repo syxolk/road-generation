@@ -97,6 +97,52 @@ def draw_stripes_rect(ctx, rectangle):
 
     ctx.restore()
 
+def draw_zebra_crossing(ctx, lanelet):
+    left = boundary_to_equi_distant(lanelet.leftBoundary, 0.04, 0.02)
+    right = boundary_to_equi_distant(lanelet.rightBoundary, 0.04, 0.02)
+    flag = True
+    ctx.save()
+    for (l, r) in zip(left, right):
+        if flag:
+            ctx.move_to(l[0], l[1])
+            ctx.line_to(r[0], r[1])
+            flag = False
+        else:
+            ctx.line_to(r[0], r[1])
+            ctx.line_to(l[0], l[1])
+            ctx.close_path()
+            ctx.fill()
+            flag = True
+    ctx.restore()
+
+def distance_points(p1, p2):
+    dx = p2.x - p1.x
+    dy = p2.y - p1.y
+    return math.sqrt(dx*dx + dy*dy)
+
+def boundary_length(boundary):
+    length = 0
+    for (p1, p2) in zip(boundary.point, boundary.point[1:]):
+        length += distance_points(p1, p2)
+    return length
+
+def boundary_point_lengths(boundary):
+    result = [0]
+    len = 0
+    for (p1, p2) in zip(boundary.point, boundary.point[1:]):
+        len += distance_points(p1, p2)
+        result.append(len)
+    return result
+
+def boundary_to_equi_distant(boundary, step_width, offset):
+    lengths = boundary_point_lengths(boundary)
+    x = list(map(lambda p: p.x, boundary.point))
+    y = list(map(lambda p: p.y, boundary.point))
+    eval_marks = np.arange(offset, lengths[-1], step_width)
+    xinterp = np.interp(eval_marks, lengths, x)
+    yinterp = np.interp(eval_marks, lengths, y)
+    return map(lambda i: (i[0],i[1]), zip(xinterp, yinterp))
+
 def draw_obstacle(ctx, obstacle):
     if obstacle.type == "blockedArea":
         for rect in obstacle.shape.rectangle:
@@ -197,6 +243,8 @@ def draw(doc, target_dir):
         ctx.set_source_rgb(1, 1, 1)
         for lanelet in doc.lanelet:
             draw_stop_line(ctx, lanelet)
+            if lanelet.type == "zebraCrossing":
+                draw_zebra_crossing(ctx, lanelet)
             #draw_boundary(ctx, lanelet.leftBoundary)
             #draw_boundary(ctx, lanelet.rightBoundary)
 
