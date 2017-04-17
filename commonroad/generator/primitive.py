@@ -598,7 +598,7 @@ class TrafficSign(StraightLine):
     def export(self, config):
         traffic_sign = schema.trafficSign(type=self._traffic_sign,
             orientation=math.pi, centerPoint=schema.point(x=self._length / 2,
-            y=-config.road_width - 0.1))
+            y=-config.road_width - 0.15))
 
         export = super().export(config)
         export.objects.append(traffic_sign)
