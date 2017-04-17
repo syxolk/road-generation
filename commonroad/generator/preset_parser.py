@@ -54,6 +54,14 @@ def eval_element(el):
         return [
             primitive.ZebraCrossing(el.attrib)
         ]
+    elif el.tag == "parkingLot":
+        return [
+            primitive.ParkingLot(el.attrib)
+        ]
+    elif el.tag == "parkingObstacle":
+        return [
+            primitive.ParkingObstacle(el.attrib)
+        ]
     elif el.tag == "sequence":
         return [x for child in el for x in eval_element(child)]
     elif el.tag == "optional":
@@ -76,5 +84,9 @@ def eval_element(el):
             if target < current_total:
                 return [x for child in case for x in eval_element(child)]
                 break
+    elif el.tag == "shuffle":
+        children = list(el)
+        random.shuffle(children)
+        return [x for child in children for x in eval_element(child)]
     else:
         return []

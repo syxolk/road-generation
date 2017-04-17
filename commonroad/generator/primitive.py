@@ -552,6 +552,47 @@ class StraightLineObstacle(StraightLine):
         export.objects.append(obstacle)
         return export
 
+class ParkingObstacle(StraightLine):
+    def __init__(self, args):
+        super().__init__(args)
+        self._width = float(args["width"])
+
+    def export(self, config):
+        y = - config.road_width - 0.3 + self._width / 2
+        rect = schema.rectangle(length=self._length,
+            width=self._width, orientation=0,
+            centerPoint=schema.point(x=self._length / 2, y=y))
+        obstacle = schema.obstacle(role="static", type="parkedVehicle", shape=schema.shape())
+        obstacle.shape.rectangle.append(rect)
+
+        parking_lane = schema.lanelet(leftBoundary=schema.boundary(), rightBoundary=schema.boundary())
+        parking_lane.leftBoundary.point.append(schema.point(x=0, y=-config.road_width))
+        parking_lane.leftBoundary.point.append(schema.point(x=self._length, y=-config.road_width))
+        parking_lane.rightBoundary.point.append(schema.point(x=0, y=-config.road_width - 0.3))
+        parking_lane.rightBoundary.point.append(schema.point(x=self._length, y=-config.road_width - 0.3))
+        parking_lane.rightBoundary.lineMarking = "solid"
+
+        export = super().export(config)
+        export.objects.append(obstacle)
+        export.objects.append(parking_lane)
+        return export
+
+class ParkingLot(StraightLine):
+    def __init__(self, args):
+        super().__init__(args)
+
+    def export(self, config):
+        parking_lane = schema.lanelet(leftBoundary=schema.boundary(), rightBoundary=schema.boundary())
+        parking_lane.leftBoundary.point.append(schema.point(x=0, y=-config.road_width))
+        parking_lane.leftBoundary.point.append(schema.point(x=self._length, y=-config.road_width))
+        parking_lane.rightBoundary.point.append(schema.point(x=0, y=-config.road_width - 0.3))
+        parking_lane.rightBoundary.point.append(schema.point(x=self._length, y=-config.road_width - 0.3))
+        parking_lane.rightBoundary.lineMarking = "solid"
+
+        export = super().export(config)
+        export.objects.append(parking_lane)
+        return export
+
 class BlockedAreaObstacle(StraightLine):
     def __init__(self, args):
         super().__init__(args)

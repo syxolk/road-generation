@@ -41,6 +41,7 @@ def check_intersections(road, road_width):
     return False
 
 def generate(root):
+    random.seed()
     while True:
         preset = preset_parser.eval(root)
         primitives = preset.primitives

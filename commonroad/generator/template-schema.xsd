@@ -125,6 +125,15 @@
         </xs:attribute>
     </xs:complexType>
 
+    <xs:complexType name="parkingLot">
+        <xs:attribute name="length" type="xs:float" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="parkingObstacle">
+        <xs:attribute name="length" type="xs:float" use="required" />
+        <xs:attribute name="width" type="xs:float" use="required" />
+    </xs:complexType>
+
     <xs:complexType name="sequence">
         <xs:complexContent>
             <xs:extension base="anyUnbounded">
@@ -164,6 +173,13 @@
         </xs:complexContent>
     </xs:complexType>
 
+    <xs:complexType name="shuffle">
+        <xs:complexContent>
+            <xs:extension base="anyUnbounded">
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
     <xs:complexType name="anyUnbounded">
         <xs:choice maxOccurs="unbounded">
             <xs:element name="line" type="line" maxOccurs="unbounded"/>
@@ -176,10 +192,13 @@
             <xs:element name="trafficSign" type="trafficSign" maxOccurs="unbounded"/>
             <xs:element name="intersection" type="intersection" maxOccurs="unbounded"/>
             <xs:element name="staticObstacle" type="staticObstacle" maxOccurs="unbounded"/>
+            <xs:element name="parkingLot" type="parkingLot" maxOccurs="unbounded"/>
+            <xs:element name="parkingObstacle" type="parkingObstacle" maxOccurs="unbounded"/>
             <xs:element name="sequence" type="sequence" maxOccurs="unbounded"/>
             <xs:element name="optional" type="optional" maxOccurs="unbounded"/>
             <xs:element name="select" type="select" maxOccurs="unbounded"/>
             <xs:element name="repeat" type="repeat" maxOccurs="unbounded"/>
+            <xs:element name="shuffle" type="shuffle" maxOccurs="unbounded"/>
         </xs:choice>
     </xs:complexType>
 
