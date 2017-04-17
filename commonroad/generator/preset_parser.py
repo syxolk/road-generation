@@ -62,13 +62,17 @@ def eval_element(el):
         else:
             return []
     elif el.tag == "repeat":
-        return [x for _ in range(int(el.attrib["n"])) for child in el for x in eval_element(child)]
+        if "min" in el.attrib and "max" in el.attrib:
+            n = random.randint(int(el.attrib["min"]), int(el.attrib["max"]))
+        else:
+            n = int(el.attrib["n"])
+        return [x for _ in range(n) for child in el for x in eval_element(child)]
     elif el.tag == "select":
-        total = sum([float(case.attrib["p"]) for case in el])
+        total = sum([float(case.attrib["w"]) for case in el])
         target = random.random() * total
         current_total = 0
         for case in el:
-            current_total += float(case.attrib["p"])
+            current_total += float(case.attrib["w"])
             if target < current_total:
                 return [x for child in case for x in eval_element(child)]
                 break
