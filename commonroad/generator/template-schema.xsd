@@ -42,6 +42,7 @@
         <xs:attribute name="leftLine" type="lineType" use="optional" default="solid" />
         <xs:attribute name="middleLine" type="lineType" use="optional" default="dashed" />
         <xs:attribute name="rightLine" type="lineType" use="optional" default="solid" />
+        <xs:attribute name="isStart" type="xs:boolean" use="optional" default="false" />
     </xs:complexType>
 
     <xs:complexType name="leftArc">

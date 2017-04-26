@@ -14,7 +14,7 @@ def obstacle_model(name, x, y, length, width, height, orientation):
       <pose frame=''>{x} {y} {z} 0 0 {orientation}</pose>
       <link name='link'>
         <inertial>
-          <mass>1</mass>
+          <mass>10</mass>
           <inertia>
             <ixx>0.166667</ixx>
             <ixy>0</ixy>

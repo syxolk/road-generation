@@ -6,7 +6,7 @@ def generate_sdf(xml_content, target_dir):
     doc = schema.CreateFromDocument(xml_content)
 
     content = groundplane.draw(doc, target_dir)
-    content += ego_vehicle.draw(target_dir)
+    content += ego_vehicle.draw(target_dir, doc.lanelet)
     for obst in doc.obstacle:
         if obst.type != "blockedArea":
             content += obstacle.draw(obst)

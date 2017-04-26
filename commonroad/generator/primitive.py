@@ -76,6 +76,8 @@ class Primitive:
         points = self.get_points()
         lanelet1 = schema.lanelet(leftBoundary=schema.boundary(), rightBoundary=schema.boundary())
         lanelet2 = schema.lanelet(leftBoundary=schema.boundary(), rightBoundary=schema.boundary())
+        if hasattr(self, "_is_start") and self._is_start:
+            lanelet1.isStart = True
 
         lanelet1.rightBoundary.lineMarking = convert_line_marking(self._right_line if hasattr(self, "_right_line") else None)
         lanelet1.leftBoundary.lineMarking = convert_line_marking(self._middle_line if hasattr(self, "_middle_line") else None)
@@ -188,6 +190,7 @@ class StraightLine(Primitive):
         self._left_line = args.get("leftLine", "solid")
         self._middle_line = args.get("middleLine", "dashed")
         self._right_line = args.get("rightLine", "solid")
+        self._is_start = args.get("isStart", False)
 
     def __repr__(self):
         return "StraightLine(length={})".format(self._length)
