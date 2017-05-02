@@ -22,7 +22,7 @@ def generate_sdf(xml_content, target_dir):
 def sun_light():
     return """
     <light name='sun_light' type='directional'>
-      <pose frame=''>0 0 1 0 -0 0</pose>
+      <pose frame=''>0 0 10 0 -0 0</pose>
       <diffuse>0.5 0.5 0.5 1</diffuse>
       <specular>0.1 0.1 0.1 1</specular>
       <direction>0.1 0.1 -0.9</direction>
