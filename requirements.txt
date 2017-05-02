@@ -1,0 +1,7 @@
+lxml
+numpy
+cairocffi
+tqdm
+matplotlib
+shapely
+scipy
