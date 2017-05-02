@@ -1,6 +1,6 @@
 <template>
     <sequence>
-        <line length="1" />
+        <line length="1" isStart="true" />
         <leftArc radius="1.4" angle="45" />
         <repeat n="4">
             <leftArc radius="1.4" angle="20" rightLine="missing" />

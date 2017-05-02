@@ -1,6 +1,6 @@
 <template>
     <sequence>
-        <line length="2" />
+        <line length="2" isStart="true" />
         <shuffle>
             <sequence>
                 <parkingObstacle width="0.28" length="0.2" />

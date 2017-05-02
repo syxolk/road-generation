@@ -1,6 +1,6 @@
 <template>
     <sequence>
-        <line length="1" />
+        <line length="1" isStart="true" />
         <repeat min="5" max="20">
             <select>
                 <case w="1">
