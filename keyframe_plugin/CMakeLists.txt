@@ -14,5 +14,5 @@ link_directories(${GAZEBO_LIBRARY_DIRS})
 
 # Create libraries and executables
 
-add_library(animated_box SHARED animated_box.cc)
-target_link_libraries(animated_box ${GAZEBO_LIBRARIES})
+add_library(keyframes SHARED keyframes.cc)
+target_link_libraries(keyframes ${GAZEBO_LIBRARIES})

@@ -50,7 +50,7 @@ def draw(target_dir, lanelets):
           <visualize>true</visualize>
         </sensor>
       </link>
-      <plugin name="push_animate" filename="libanimated_box.so">
+      <plugin name="keyframes" filename="libkeyframes.so">
         {1}
       </plugin>
     </model>

@@ -15,9 +15,6 @@ namespace gazebo
 
         // create the animation
         gazebo::common::PoseAnimationPtr anim(
-              // name the animation "test",
-              // make it last 10 seconds,
-              // and set it on a repeat loop
               new gazebo::common::PoseAnimation("test", 100.0, true));
 
         gazebo::common::PoseKeyFrame *key;
@@ -34,7 +31,6 @@ namespace gazebo
             key->Rotation(ignition::math::Quaterniond(0, 0, orientation));
         }
 
-        // set the animation
         _parent->SetAnimation(anim);
 
     }
